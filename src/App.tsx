@@ -1138,11 +1138,10 @@ function Footer({ dispatch }) {
       <Container className="grid gap-10 py-14 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-white">
-              <Sparkles className="h-5 w-5" />
-            </span>
-            <span className="text-lg font-black tracking-tight text-white">Greenlight Cleaning</span>
-          </div>
+<div className="flex items-center gap-2.5">
+  <img src="/logo.png" alt="Greenlight Cleaning" className="h-9 w-auto" />
+  <span className="text-lg font-black tracking-tight text-white">Greenlight Cleaning</span>
+</div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
             Domestic, commercial, end of lease, NDIS and home care cleaning across Melbourne.
             15+ years of consistent, agency approved results.
