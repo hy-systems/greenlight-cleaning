@@ -905,7 +905,7 @@ function BeforeAfterGallery({ heading = true }) {
   const items = [
     { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-before.jpg", after: "/kitchen-after.jpg" },
     { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-before.jpg", after: "/bathroom-after.jpg" },
-    { title: "Carpet steam clean", sublabel: "End of lease, bond ready", before: "/carpet-before.jpg", after: "/carpet-after.jpg" }
+    { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
   ];
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
