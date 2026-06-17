@@ -1,9 +1,9 @@
 import React, { useReducer, useState, useEffect, useRef } from "react";
 import {
   Menu, X, Phone, Mail, MessageCircle, MapPin, Check, CheckCircle2, Star,
-  Shield, Sparkles, ArrowRight, ChevronRight, Clock, Award, ArrowLeft,
+  Shield, ArrowRight, ChevronRight, Clock, Award, ArrowLeft,
   Home, Building2, KeyRound, Truck, Paintbrush2, Hammer, Tag,
-  HeartHandshake, Accessibility, Layers, Smartphone, Send
+  HeartHandshake, Accessibility, Layers, Smartphone
 } from "lucide-react";
 
 /* ============================================================
@@ -17,9 +17,52 @@ const MAILTO = "mailto:Info@greenlightclean.com.au?subject=Cleaning%20Quote";
 const WA = "https://wa.me/61430230971?text=Hi%20Greenlight%2C%20I%27d%20like%20a%20cleaning%20quote.%20Here%20are%20my%20property%20photos%2Fvideos.";
 
 /* ============================================================
+   TYPES
+   ============================================================ */
+interface ServiceGroup { title: string; items: string[]; }
+interface Pricing { type: string; header: string[]; rows: string[][]; }
+interface Service {
+  icon: string;
+  name: string;
+  summary: string;
+  groups: ServiceGroup[];
+  exclusions?: string[];
+  chips?: string[];
+  chipsTitle?: string;
+  pricing?: Pricing;
+  extras?: string[][];
+  rate?: string;
+  note?: string;
+  quote?: boolean;
+}
+
+type Route = "home" | "services" | "service-detail" | "gallery" | "areas" | "about" | "contact";
+
+interface State {
+  currentRoute: Route;
+  isMenuOpen: boolean;
+  isChatOpen: boolean;
+  activeServiceCategory: string;
+}
+
+type Action =
+  | { type: "NAVIGATE"; route: Route }
+  | { type: "OPEN_SERVICE"; key: string }
+  | { type: "SET_SERVICE"; key: string }
+  | { type: "TOGGLE_MENU" }
+  | { type: "CLOSE_MENU" }
+  | { type: "TOGGLE_CHAT" }
+  | { type: "CLOSE_CHAT" };
+
+type Dispatch = React.Dispatch<Action>;
+
+interface NavLink { label: string; route: Route; }
+interface IconItem { icon: React.ElementType; text: string; }
+
+/* ============================================================
    WHATSAPP GLYPH (lucide has no brand icon)
    ============================================================ */
-function WhatsAppIcon({ className }) {
+function WhatsAppIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -30,19 +73,19 @@ function WhatsAppIcon({ className }) {
 /* ============================================================
    SERVICE DATA PAYLOADS
    ============================================================ */
-const ICONS = {
+const ICONS: Record<string, React.ElementType> = {
   home: Home, building: Building2, key: KeyRound, truck: Truck,
   paint: Paintbrush2, hammer: Hammer, tag: Tag, access: Accessibility,
   heart: HeartHandshake, layers: Layers
 };
 
-const NDIS_PROVIDERS = [
+const NDIS_PROVIDERS: string[] = [
   "Scope", "Mable", "Hireup", "Claro", "Aruma", "Yooralla", "Melba Support Services",
   "VMCH", "Baptcare", "Jewish Care", "Bolton Clarke", "mecwacare", "Benetas",
   "Australian Unity", "Silverchain", "HammondCare", "MiCare", "Fronditha Care"
 ];
 
-const SERVICES = {
+const SERVICES: Record<string, Service> = {
   "regular-domestic": {
     icon: "home",
     name: "Regular Domestic Cleaning",
@@ -281,9 +324,9 @@ const SERVICES = {
   }
 };
 
-const SERVICE_KEYS = Object.keys(SERVICES);
+const SERVICE_KEYS: string[] = Object.keys(SERVICES);
 
-const AREAS = [
+const AREAS: string[] = [
   "Bentleigh", "Bentleigh East", "Brighton", "Hampton", "Black Rock", "Sandringham",
   "Elwood", "St Kilda", "Middle Park", "Port Melbourne", "South Melbourne", "South Yarra",
   "Prahran", "Windsor", "Richmond", "Hawthorn", "Kew", "Camberwell", "Canterbury", "Balwyn",
@@ -294,7 +337,7 @@ const AREAS = [
   "Carlton", "Melbourne CBD"
 ];
 
-const STATS = [
+const STATS: { value: string; label: string }[] = [
   { value: "15+", label: "Years cleaning Melbourne" },
   { value: "48", label: "Suburbs serviced" },
   { value: "14", label: "Agencies approved" },
@@ -304,14 +347,14 @@ const STATS = [
 /* ============================================================
    STATE MACHINE (useReducer)
    ============================================================ */
-const initialState = {
+const initialState: State = {
   currentRoute: "home",
   isMenuOpen: false,
   isChatOpen: false,
   activeServiceCategory: "regular-domestic"
 };
 
-function reducer(state, action) {
+function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "NAVIGATE":
       return { ...state, currentRoute: action.route, isMenuOpen: false };
@@ -337,8 +380,13 @@ function reducer(state, action) {
    Replicates Framer Motion fadeInUp + staggerChildren(0.1)
    via IntersectionObserver and CSS keyframes.
    ============================================================ */
-function Reveal({ children, delay = 0, className = "", as: Tag = "div" }) {
-  const ref = useRef(null);
+function Reveal({ children, delay = 0, className = "", as: Tag = "div" }: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  as?: React.ElementType;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const el = ref.current;
@@ -359,7 +407,7 @@ function Reveal({ children, delay = 0, className = "", as: Tag = "div" }) {
   }, []);
   return (
     <Tag
-      ref={ref}
+      ref={ref as any}
       className={`gl-reveal ${inView ? "gl-in" : ""} ${className}`}
       style={{ animationDelay: `${delay}s` }}
     >
@@ -371,24 +419,35 @@ function Reveal({ children, delay = 0, className = "", as: Tag = "div" }) {
 /* ============================================================
    LAYOUT HELPERS
    ============================================================ */
-function Container({ children, className = "" }) {
+function Container({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>;
 }
 
-function EmeraldButton({ href, onClick, children, className = "" }) {
+function EmeraldButton({ href, onClick, children, className = "" }: {
+  href?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
   const cls = `gl-cta gl-tap inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 ${className}`;
   if (href) return <a href={href} className={cls}>{children}</a>;
   return <button onClick={onClick} className={cls}>{children}</button>;
 }
 
-function OutlineButton({ href, onClick, children, dark = false, className = "" }) {
+function OutlineButton({ href, onClick, children, dark = false, className = "" }: {
+  href?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+  dark?: boolean;
+  className?: string;
+}) {
   const tone = dark ? "border-white/25 text-white hover:bg-white/10" : "border-slate-300 text-slate-900 hover:bg-slate-100";
   const cls = `gl-cta gl-tap inline-flex items-center justify-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition-colors ${tone} ${className}`;
   if (href) return <a href={href} className={cls}>{children}</a>;
   return <button onClick={onClick} className={cls}>{children}</button>;
 }
 
-function Eyebrow({ children }) {
+function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-tight text-emerald-600">
       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -400,8 +459,8 @@ function Eyebrow({ children }) {
 /* ============================================================
    NAVIGATION
    ============================================================ */
-function Navigation({ state, dispatch }) {
-  const links = [
+function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
+  const links: NavLink[] = [
     { label: "Home", route: "home" },
     { label: "Services", route: "services" },
     { label: "Gallery", route: "gallery" },
@@ -409,12 +468,13 @@ function Navigation({ state, dispatch }) {
     { label: "About", route: "about" },
     { label: "Contact", route: "contact" }
   ];
-  const go = (route) => dispatch({ type: "NAVIGATE", route });
+  const go = (route: Route) => dispatch({ type: "NAVIGATE", route });
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
       <Container className="flex h-16 items-center justify-between lg:h-20">
-        <button onClick={() => go("home")} className="flex items-center gap-2.5 gl-tap">
+        <button onClick={() => go("home")} className="gl-fade-in flex items-center gap-2.5 gl-tap">
           <img src="/logo.png" alt="Greenlight Cleaning Pty Ltd" className="h-10 w-auto" />
+          <span className="text-base font-black tracking-tight text-slate-900 sm:text-lg">Greenlight Cleaning</span>
         </button>
 
         <nav className="hidden items-center gap-1 lg:flex">
@@ -473,8 +533,8 @@ function Navigation({ state, dispatch }) {
 /* ============================================================
    HERO
    ============================================================ */
-function HeroSection({ dispatch }) {
-  const highlights = [
+function HeroSection({ dispatch }: { dispatch: Dispatch }) {
+  const highlights: IconItem[] = [
     { icon: Shield, text: "Bond back focused end of lease cleans" },
     { icon: Accessibility, text: "NDIS and Home Care provider ready" },
     { icon: Award, text: "Fully insured, agency approved teams" },
@@ -564,8 +624,8 @@ function StatsBand() {
 /* ============================================================
    TRI CHANNEL CONTACT
    ============================================================ */
-function TriChannelContact({ compact = false }) {
-  const channels = [
+function TriChannelContact({ compact = false }: { compact?: boolean }) {
+  const channels: { href: string; accent: string; Icon: React.ElementType; label: string; micro: string; action: string }[] = [
     {
       href: WA, accent: "emerald", Icon: WhatsAppIcon, label: "WhatsApp",
       micro: "Fastest for quotes. Send us your property photos and videos directly.",
@@ -594,7 +654,7 @@ function TriChannelContact({ compact = false }) {
         <div className="grid gap-5 md:grid-cols-3">
           {channels.map((c, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              <a
+              
                 href={c.href}
                 className={`gl-elevate flex h-full flex-col rounded-2xl border p-6 ${c.accent === "emerald" ? "border-emerald-200 bg-emerald-50" : "border-slate-200 bg-white"}`}
               >
@@ -618,7 +678,7 @@ function TriChannelContact({ compact = false }) {
 /* ============================================================
    SERVICE GRID
    ============================================================ */
-function ServiceCard({ k, dispatch, delay }) {
+function ServiceCard({ k, dispatch, delay }: { k: string; dispatch: Dispatch; delay: number }) {
   const s = SERVICES[k];
   const Icon = ICONS[s.icon];
   return (
@@ -640,7 +700,7 @@ function ServiceCard({ k, dispatch, delay }) {
   );
 }
 
-function ServiceGrid({ dispatch }) {
+function ServiceGrid({ dispatch }: { dispatch: Dispatch }) {
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
       {SERVICE_KEYS.map((k, i) => (
@@ -653,7 +713,7 @@ function ServiceGrid({ dispatch }) {
 /* ============================================================
    DYNAMIC SERVICE VIEW
    ============================================================ */
-function PricingTable({ pricing }) {
+function PricingTable({ pricing }: { pricing: Pricing }) {
   const isCarpet = pricing.type === "carpet";
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200">
@@ -682,12 +742,12 @@ function PricingTable({ pricing }) {
   );
 }
 
-function DynamicServiceView({ state, dispatch }) {
+function DynamicServiceView({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   const k = state.activeServiceCategory;
   const s = SERVICES[k];
   const Icon = ICONS[s.icon];
-  const tabStripRef = useRef(null);
-  const activeTabRef = useRef(null);
+  const tabStripRef = useRef<HTMLDivElement>(null);
+  const activeTabRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const strip = tabStripRef.current;
     const tab = activeTabRef.current;
@@ -856,7 +916,12 @@ function DynamicServiceView({ state, dispatch }) {
 /* ============================================================
    BEFORE / AFTER GALLERY
    ============================================================ */
-function BeforeAfter({ title, sublabel, beforeImage, afterImage }) {
+function BeforeAfter({ title, sublabel, beforeImage, afterImage }: {
+  title: string;
+  sublabel: string;
+  beforeImage: string;
+  afterImage: string;
+}) {
   const [pos, setPos] = useState(50);
   return (
     <Reveal>
@@ -872,9 +937,7 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }) {
           </div>
           {/* Labels */}
           <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-slate-900/80 px-3 py-1 text-xs font-bold uppercase tracking-tight text-white">Before</span>
-          <span className="pointer-events-none absolute right-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold uppercase tracking-tight text-white">
-            <Sparkles className="h-3 w-3" /> After
-          </span>
+          <span className="pointer-events-none absolute right-3 top-3 z-10 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold uppercase tracking-tight text-white">After</span>
           {/* Divider + handle */}
           <div className="pointer-events-none absolute inset-y-0 z-20 w-0.5 bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.1)]" style={{ left: `${pos}%` }}>
             <span className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full border-2 border-emerald-500 bg-white shadow-md">
@@ -887,7 +950,7 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }) {
           {/* Range control */}
           <input
             type="range" min="0" max="100" value={pos}
-            onChange={(e) => setPos(Number(e.target.value))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPos(Number(e.target.value))}
             aria-label={`Reveal ${title} after cleaning`}
             className="gl-range absolute inset-0 z-30 h-full w-full cursor-ew-resize opacity-0"
           />
@@ -901,11 +964,11 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }) {
   );
 }
 
-function BeforeAfterGallery({ heading = true }) {
+function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
   const items = [
-    { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-before.jpg", after: "/kitchen-after.jpg" },
-    { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-before.jpg", after: "/bathroom-after.jpg" },
-    { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
+    { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-after.jpg", after: "/kitchen-before.jpg" },
+    { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-after.jpg", after: "/bathroom-before.jpg" },
+    { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-after.jpg", after: "/tiles-before.jpg" }
   ];
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
@@ -930,7 +993,7 @@ function BeforeAfterGallery({ heading = true }) {
 /* ============================================================
    PAGE: HOME
    ============================================================ */
-function HomePage({ state, dispatch }) {
+function HomePage({ dispatch }: { dispatch: Dispatch }) {
   return (
     <>
       <HeroSection dispatch={dispatch} />
@@ -959,7 +1022,7 @@ function HomePage({ state, dispatch }) {
 /* ============================================================
    PAGE: SERVICES
    ============================================================ */
-function ServicesPage({ dispatch }) {
+function ServicesPage({ dispatch }: { dispatch: Dispatch }) {
   return (
     <section className="bg-white py-12 sm:py-16">
       <Container>
@@ -977,8 +1040,8 @@ function ServicesPage({ dispatch }) {
 /* ============================================================
    PAGE: ABOUT
    ============================================================ */
-function AboutPage({ dispatch }) {
-  const points = [
+function AboutPage({ dispatch }: { dispatch: Dispatch }) {
+  const points: { icon: React.ElementType; title: string; body: string }[] = [
     { icon: Award, title: "15+ years experience", body: "A decade and a half cleaning Melbourne homes, offices and rentals." },
     { icon: Shield, title: "Fully insured", body: "Insured teams trained to consistent, repeatable standards." },
     { icon: KeyRound, title: "Agency approved", body: "Bond back cleans aligned to the requirements of 14 leading agencies." },
@@ -1028,7 +1091,7 @@ function AboutPage({ dispatch }) {
 /* ============================================================
    PAGE: AREAS
    ============================================================ */
-function AreasPage({ dispatch }) {
+function AreasPage({ dispatch }: { dispatch: Dispatch }) {
   return (
     <>
       <section className="bg-white py-12 sm:py-16">
@@ -1059,7 +1122,7 @@ function AreasPage({ dispatch }) {
    PAGE: CONTACT
    ============================================================ */
 function ContactPage() {
-  const details = [
+  const details: { Icon: React.ElementType; label: string; value: string; href: string }[] = [
     { Icon: Phone, label: "Call", value: PHONE_DISPLAY, href: TEL },
     { Icon: Mail, label: "Email", value: EMAIL, href: MAILTO },
     { Icon: WhatsAppIcon, label: "WhatsApp", value: "Send photos for a quote", href: WA }
@@ -1104,7 +1167,7 @@ function ContactPage() {
 /* ============================================================
    CTA BAND
    ============================================================ */
-function CtaBand({ dispatch }) {
+function CtaBand({ dispatch }: { dispatch: Dispatch }) {
   return (
     <section className="bg-slate-900 py-16 text-white sm:py-20">
       <Container className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
@@ -1124,8 +1187,8 @@ function CtaBand({ dispatch }) {
 /* ============================================================
    FOOTER
    ============================================================ */
-function Footer({ dispatch }) {
-  const quick = [
+function Footer({ dispatch }: { dispatch: Dispatch }) {
+  const quick: NavLink[] = [
     { label: "Home", route: "home" },
     { label: "Services", route: "services" },
     { label: "Gallery", route: "gallery" },
@@ -1138,10 +1201,9 @@ function Footer({ dispatch }) {
       <Container className="grid gap-10 py-14 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <div className="flex items-center gap-2.5">
-<div className="flex items-center gap-2.5">
-  <img src="/logo.png" alt="Greenlight Cleaning" className="h-9 w-auto" />
-  <span className="text-lg font-black tracking-tight text-white">Greenlight Cleaning</span>
-</div>
+            <img src="/logo.png" alt="Greenlight Cleaning" className="h-9 w-auto" />
+            <span className="text-lg font-black tracking-tight text-white">Greenlight Cleaning</span>
+          </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
             Domestic, commercial, end of lease, NDIS and home care cleaning across Melbourne.
             15+ years of consistent, agency approved results.
@@ -1198,8 +1260,8 @@ function Footer({ dispatch }) {
 /* ============================================================
    FLOATING ACTION MENU (Tri channel)
    ============================================================ */
-function FloatingActionMenu({ state, dispatch }) {
-  const channels = [
+function FloatingActionMenu({ state, dispatch }: { state: State; dispatch: Dispatch }) {
+  const channels: { href: string; Icon: React.ElementType; label: string; micro: string; accent: string }[] = [
     { href: WA, Icon: WhatsAppIcon, label: "WhatsApp", micro: "Fastest for quotes: Send us your property photos/videos directly.", accent: "emerald" },
     { href: SMS, Icon: Smartphone, label: "Direct SMS", micro: "Text us for an instant reply.", accent: "slate" },
     { href: MAILTO, Icon: Mail, label: "Email enquiry", micro: "Send your details and we will reply with a quote.", accent: "slate" }
@@ -1274,14 +1336,14 @@ export default function App() {
 
   const renderRoute = () => {
     switch (state.currentRoute) {
-      case "home": return <HomePage state={state} dispatch={dispatch} />;
+      case "home": return <HomePage dispatch={dispatch} />;
       case "services": return <ServicesPage dispatch={dispatch} />;
       case "service-detail": return <DynamicServiceView state={state} dispatch={dispatch} />;
       case "gallery": return <BeforeAfterGallery />;
       case "areas": return <AreasPage dispatch={dispatch} />;
       case "about": return <AboutPage dispatch={dispatch} />;
       case "contact": return <ContactPage />;
-      default: return <HomePage state={state} dispatch={dispatch} />;
+      default: return <HomePage dispatch={dispatch} />;
     }
   };
 
@@ -1314,6 +1376,10 @@ export default function App() {
         @keyframes gl-pop-in { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .gl-pop { animation: gl-pop-in 0.22s cubic-bezier(0.16,1,0.3,1) forwards; }
 
+        /* header brand fade-in */
+        @keyframes gl-fade-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .gl-fade-in { animation: gl-fade-in 0.5s ease-out both; }
+
         /* touch target floor (WCAG 44px minimum) */
         .gl-tap { min-height: 44px; }
         /* hide scrollbar so the edge fade is the scroll affordance */
@@ -1325,7 +1391,7 @@ export default function App() {
         .gl-range::-moz-range-thumb { width: 44px; height: 100%; border: 0; background: transparent; cursor: ew-resize; }
 
         @media (prefers-reduced-motion: reduce) {
-          .gl-reveal, .gl-reveal.gl-in, .gl-fab, .gl-pop { animation: none !important; opacity: 1 !important; transform: none !important; }
+          .gl-reveal, .gl-reveal.gl-in, .gl-fab, .gl-pop, .gl-fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }
           .gl-elevate, .gl-cta { transition: none !important; }
           html { scroll-behavior: auto; }
         }
