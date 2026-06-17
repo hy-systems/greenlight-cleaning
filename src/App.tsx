@@ -654,7 +654,7 @@ function TriChannelContact({ compact = false }: { compact?: boolean }) {
         <div className="grid gap-5 md:grid-cols-3">
           {channels.map((c, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              
+              <a
                 href={c.href}
                 className={`gl-elevate flex h-full flex-col rounded-2xl border p-6 ${c.accent === "emerald" ? "border-emerald-200 bg-emerald-50" : "border-slate-200 bg-white"}`}
               >
