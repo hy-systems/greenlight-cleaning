@@ -386,49 +386,41 @@ const GlobalStyles = memo(function GlobalStyles() {
         html { scroll-behavior: smooth; }
         .font-sans { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-        /* fadeInUp + stagger with hardware acceleration */
+        /* Smooth animation curves with extended durations */
         @keyframes gl-fade-up { 
-          from { opacity: 0; transform: translateY(40px); } 
+          from { opacity: 0; transform: translateY(30px); } 
           to { opacity: 1; transform: translateY(0); } 
         }
         .gl-reveal { 
           opacity: 0; 
-          will-change: opacity, transform; 
         }
         .gl-reveal.gl-in { 
-          animation: gl-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+          animation: gl-fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
         }
 
-        /* hoverElevate: scale 1.02, y -5 */
-        .gl-elevate { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease; will-change: transform; }
+        .gl-elevate { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease; }
         .gl-elevate:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 18px 40px -18px rgba(15,23,42,0.35); }
-        .gl-cta { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.2s ease; will-change: transform; }
+        .gl-cta { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, background-color 0.2s ease; }
         .gl-cta:hover { transform: translateY(-3px) scale(1.02); }
 
-        /* hero ambient glow */
         .gl-hero-glow { position: absolute; inset: 0; background:
           radial-gradient(60% 60% at 80% 0%, rgba(16,185,129,0.22), transparent 60%),
           radial-gradient(50% 50% at 0% 100%, rgba(16,185,129,0.10), transparent 60%); }
 
-        /* FAB pulse */
         @keyframes gl-pulse { 0%,100% { box-shadow: 0 12px 30px -8px rgba(16,185,129,0.5), 0 0 0 0 rgba(16,185,129,0.45); } 50% { box-shadow: 0 12px 30px -8px rgba(16,185,129,0.5), 0 0 0 12px rgba(16,185,129,0); } }
-        .gl-fab { animation: gl-pulse 2.6s infinite; transition: transform 0.2s ease; will-change: transform, box-shadow; }
+        .gl-fab { animation: gl-pulse 2.6s infinite; transition: transform 0.2s ease; }
         .gl-fab:hover { transform: scale(1.06); }
+        
         @keyframes gl-pop-in { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .gl-pop { animation: gl-pop-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* header brand fade-in */
         @keyframes gl-fade-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
         .gl-fade-in { animation: gl-fade-in 0.6s ease-out both; }
 
-        /* touch target floor (WCAG 44px minimum) */
         .gl-tap { min-height: 44px; }
-        
-        /* hide scrollbar so the edge fade is the scroll affordance */
         .gl-noscroll { scrollbar-width: none; -ms-overflow-style: none; }
         .gl-noscroll::-webkit-scrollbar { display: none; }
 
-        /* range slider thumb invisible (handle is drawn separately) */
         .gl-range::-webkit-slider-thumb { -webkit-appearance: none; width: 44px; height: 100%; cursor: ew-resize; }
         .gl-range::-moz-range-thumb { width: 44px; height: 100%; border: 0; background: transparent; cursor: ew-resize; }
 
@@ -643,7 +635,7 @@ function HeroSection({ dispatch }: { dispatch: Dispatch }) {
 
         <div className="lg:col-span-5">
           <Reveal delay={0.2}>
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur sm:p-8">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">
               <p className="text-sm font-bold uppercase tracking-tight text-emerald-300">Why Greenlight</p>
               <div className="mt-5 grid gap-4">
                 {highlights.map((h, i) => (
@@ -1032,8 +1024,8 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }: {
 
 function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
   const items = [
-    { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-after.jpg", after: "/kitchen-before.jpg" },
-    { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-after.jpg", after: "/bathroom-before.jpg" },
+    { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-before.jpg", after: "/kitchen-after.jpg" },
+    { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-before.jpg", after: "/bathroom-after.jpg" },
     { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
   ];
   return (
