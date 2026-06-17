@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect, useRef } from "react";
+import React, { useReducer, useState, useEffect, useRef, memo } from "react";
 import {
   Menu, X, Phone, Mail, MessageCircle, MapPin, Check, CheckCircle2, Star,
   Shield, ArrowRight, ChevronRight, Clock, Award, ArrowLeft,
@@ -376,9 +376,75 @@ function reducer(state: State, action: Action): State {
 }
 
 /* ============================================================
+   GLOBAL STYLES (Performance Optimization)
+   Extracted from the render tree to prevent layout thrashing
+   ============================================================ */
+const GlobalStyles = memo(function GlobalStyles() {
+  return (
+    <style dangerouslySetInnerHTML={{
+      __html: `
+        html { scroll-behavior: smooth; }
+        .font-sans { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        /* fadeInUp + stagger with hardware acceleration */
+        @keyframes gl-fade-up { 
+          from { opacity: 0; transform: translateY(40px); } 
+          to { opacity: 1; transform: translateY(0); } 
+        }
+        .gl-reveal { 
+          opacity: 0; 
+          will-change: opacity, transform; 
+        }
+        .gl-reveal.gl-in { 
+          animation: gl-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+        }
+
+        /* hoverElevate: scale 1.02, y -5 */
+        .gl-elevate { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease; will-change: transform; }
+        .gl-elevate:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 18px 40px -18px rgba(15,23,42,0.35); }
+        .gl-cta { transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.2s ease; will-change: transform; }
+        .gl-cta:hover { transform: translateY(-3px) scale(1.02); }
+
+        /* hero ambient glow */
+        .gl-hero-glow { position: absolute; inset: 0; background:
+          radial-gradient(60% 60% at 80% 0%, rgba(16,185,129,0.22), transparent 60%),
+          radial-gradient(50% 50% at 0% 100%, rgba(16,185,129,0.10), transparent 60%); }
+
+        /* FAB pulse */
+        @keyframes gl-pulse { 0%,100% { box-shadow: 0 12px 30px -8px rgba(16,185,129,0.5), 0 0 0 0 rgba(16,185,129,0.45); } 50% { box-shadow: 0 12px 30px -8px rgba(16,185,129,0.5), 0 0 0 12px rgba(16,185,129,0); } }
+        .gl-fab { animation: gl-pulse 2.6s infinite; transition: transform 0.2s ease; will-change: transform, box-shadow; }
+        .gl-fab:hover { transform: scale(1.06); }
+        @keyframes gl-pop-in { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .gl-pop { animation: gl-pop-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* header brand fade-in */
+        @keyframes gl-fade-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .gl-fade-in { animation: gl-fade-in 0.6s ease-out both; }
+
+        /* touch target floor (WCAG 44px minimum) */
+        .gl-tap { min-height: 44px; }
+        
+        /* hide scrollbar so the edge fade is the scroll affordance */
+        .gl-noscroll { scrollbar-width: none; -ms-overflow-style: none; }
+        .gl-noscroll::-webkit-scrollbar { display: none; }
+
+        /* range slider thumb invisible (handle is drawn separately) */
+        .gl-range::-webkit-slider-thumb { -webkit-appearance: none; width: 44px; height: 100%; cursor: ew-resize; }
+        .gl-range::-moz-range-thumb { width: 44px; height: 100%; border: 0; background: transparent; cursor: ew-resize; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .gl-reveal, .gl-reveal.gl-in, .gl-fab, .gl-pop, .gl-fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+          .gl-elevate, .gl-cta { transition: none !important; }
+          html { scroll-behavior: auto; }
+        }
+      `
+    }} />
+  );
+});
+
+/* ============================================================
    MOTION PRIMITIVE
    Replicates Framer Motion fadeInUp + staggerChildren(0.1)
-   via IntersectionObserver and CSS keyframes.
    ============================================================ */
 function Reveal({ children, delay = 0, className = "", as: Tag = "div" }: {
   children: React.ReactNode;
@@ -400,7 +466,7 @@ function Reveal({ children, delay = 0, className = "", as: Tag = "div" }: {
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.05, rootMargin: "0px 0px -50px 0px" }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -470,7 +536,7 @@ function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   ];
   const go = (route: Route) => dispatch({ type: "NAVIGATE", route });
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
+    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white shadow-sm">
       <Container className="flex h-16 items-center justify-between lg:h-20">
         <button onClick={() => go("home")} className="gl-fade-in flex items-center gap-3 gl-tap">
           <img src="/logo.png" alt="Greenlight Cleaning Pty Ltd" className="h-10 w-auto" />
@@ -929,11 +995,11 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }: {
         <div className="relative h-64 w-full select-none sm:h-72">
           {/* Before image (full) */}
           <div className="absolute inset-0 bg-slate-200">
-            <img src={beforeImage} alt={`${title} before cleaning`} draggable={false} className="h-full w-full object-cover" />
+            <img src={beforeImage} alt={`${title} before cleaning`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
           </div>
           {/* After image clipped by the slider position */}
           <div className="absolute inset-0 overflow-hidden bg-emerald-100" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
-            <img src={afterImage} alt={`${title} after cleaning`} draggable={false} className="h-full w-full object-cover" />
+            <img src={afterImage} alt={`${title} after cleaning`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
           </div>
           {/* Labels */}
           <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-slate-900/80 px-3 py-1 text-xs font-bold uppercase tracking-tight text-white">Before</span>
@@ -968,7 +1034,7 @@ function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
   const items = [
     { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-after.jpg", after: "/kitchen-before.jpg" },
     { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-after.jpg", after: "/bathroom-before.jpg" },
-    { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-after.jpg", after: "/tiles-before.jpg" }
+    { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
   ];
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
@@ -1349,54 +1415,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 antialiased">
-      <style>{`
-        html { scroll-behavior: smooth; }
-        .font-sans { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-
-        /* fadeInUp + stagger */
-        @keyframes gl-fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .gl-reveal { opacity: 0; }
-        .gl-reveal.gl-in { animation: gl-fade-up 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
-
-        /* hoverElevate: scale 1.02, y -5 */
-        .gl-elevate { transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease; will-change: transform; }
-        .gl-elevate:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 18px 40px -18px rgba(15,23,42,0.35); }
-        .gl-cta { transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease, background-color 0.2s ease; }
-        .gl-cta:hover { transform: translateY(-5px) scale(1.02); }
-
-        /* hero ambient glow */
-        .gl-hero-glow { position: absolute; inset: 0; background:
-          radial-gradient(60% 60% at 80% 0%, rgba(16,185,129,0.22), transparent 60%),
-          radial-gradient(50% 50% at 0% 100%, rgba(16,185,129,0.10), transparent 60%); }
-
-        /* FAB pulse */
-        @keyframes gl-pulse { 0%,100% { box-shadow: 0 12px 30px -8px rgba(16,185,129,0.5), 0 0 0 0 rgba(16,185,129,0.45); } 50% { box-shadow: 0 12px 30px -8px rgba(16,185,129,0.5), 0 0 0 12px rgba(16,185,129,0); } }
-        .gl-fab { animation: gl-pulse 2.6s infinite; transition: transform 0.2s ease; }
-        .gl-fab:hover { transform: scale(1.06); }
-        @keyframes gl-pop-in { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .gl-pop { animation: gl-pop-in 0.22s cubic-bezier(0.16,1,0.3,1) forwards; }
-
-        /* header brand fade-in */
-        @keyframes gl-fade-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-        .gl-fade-in { animation: gl-fade-in 0.5s ease-out both; }
-
-        /* touch target floor (WCAG 44px minimum) */
-        .gl-tap { min-height: 44px; }
-        /* hide scrollbar so the edge fade is the scroll affordance */
-        .gl-noscroll { scrollbar-width: none; -ms-overflow-style: none; }
-        .gl-noscroll::-webkit-scrollbar { display: none; }
-
-        /* range slider thumb invisible (handle is drawn separately) */
-        .gl-range::-webkit-slider-thumb { -webkit-appearance: none; width: 44px; height: 100%; cursor: ew-resize; }
-        .gl-range::-moz-range-thumb { width: 44px; height: 100%; border: 0; background: transparent; cursor: ew-resize; }
-
-        @media (prefers-reduced-motion: reduce) {
-          .gl-reveal, .gl-reveal.gl-in, .gl-fab, .gl-pop, .gl-fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }
-          .gl-elevate, .gl-cta { transition: none !important; }
-          html { scroll-behavior: auto; }
-        }
-      `}</style>
-
+      <GlobalStyles />
       <SeoSchema />
       <Navigation state={state} dispatch={dispatch} />
       <main>{renderRoute()}</main>
