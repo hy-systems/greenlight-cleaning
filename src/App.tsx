@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useRef, memo } from "react";
+import React, { useReducer, useState, useEffect, useRef, memo } from "react";
 import {
   Menu, X, Phone, Mail, MessageCircle, MapPin, Check, CheckCircle2, Star,
   Shield, ArrowRight, ChevronRight, Clock, Award, ArrowLeft,
@@ -1023,8 +1023,8 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }: {
 
 function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
   const items = [
-    { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-after.jpg", after: "/kitchen-before.jpg" },
-    { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-after.jpg", after: "/bathroom-before.jpg" },
+    { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-before.jpg", after: "/kitchen-after.jpg" },
+    { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-before.jpg", after: "/bathroom-after.jpg" },
     { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
   ];
   return (
