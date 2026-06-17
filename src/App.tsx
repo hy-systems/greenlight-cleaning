@@ -470,11 +470,11 @@ function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   ];
   const go = (route: Route) => dispatch({ type: "NAVIGATE", route });
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white">
       <Container className="flex h-16 items-center justify-between lg:h-20">
-        <button onClick={() => go("home")} className="gl-fade-in flex items-center gap-2.5 gl-tap">
+        <button onClick={() => go("home")} className="gl-fade-in flex items-center gap-3 gl-tap">
           <img src="/logo.png" alt="Greenlight Cleaning Pty Ltd" className="h-10 w-auto" />
-          <span className="text-base font-black tracking-tight text-slate-900 sm:text-lg">Greenlight Cleaning</span>
+          <span className="text-xl font-extrabold tracking-tighter text-slate-900">Greenlight Cleaning</span>
         </button>
 
         <nav className="hidden items-center gap-1 lg:flex">
@@ -968,7 +968,7 @@ function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
   const items = [
     { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-after.jpg", after: "/kitchen-before.jpg" },
     { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-after.jpg", after: "/bathroom-before.jpg" },
-    { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-after.jpg", after: "/tiles-before.jpg" }
+    { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
   ];
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
