@@ -989,7 +989,7 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }: {
             <img src={beforeImage} alt={`${title} before cleaning`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
           </div>
           {/* After image clipped by the slider position */}
-          <div className="absolute inset-0 overflow-hidden bg-emerald-100" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
+                      <div className="absolute inset-0 overflow-hidden bg-emerald-100" style={{ clipPath: `inset(0 0 0 ${pos}%)` }}>
             <img src={afterImage} alt={`${title} after cleaning`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
           </div>
           {/* Labels */}
