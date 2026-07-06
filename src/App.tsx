@@ -344,6 +344,25 @@ const STATS: { value: string; label: string }[] = [
   { value: "18", label: "NDIS and care providers" }
 ];
 
+const WHY_CHOOSE_US_REASONS = [
+  { title: "Over 15 Years of Trusted Cleaning Experience", desc: "We've proudly provided professional cleaning services to Melbourne families for over 15 years, earning long-term relationships through quality workmanship and dependable service." },
+  { title: "Transparent & Fair Pricing", desc: "We don't believe in charging every home the same fixed price. Every quotation is tailored to your home's actual cleaning requirements, ensuring you only pay for the cleaning your home genuinely needs." },
+  { title: "No Extra Charges for Unused Rooms", desc: "If a spare bedroom hasn't been used for months or certain areas require very little attention, we won't charge you as though every room has been heavily used. Our pricing reflects the actual work required, making our service fair for every customer." },
+  { title: "Fully Insured & Police Checked", desc: "Your home and belongings are important. Our team is fully insured, professionally trained and police checked for your peace of mind." },
+  { title: "Reliable, Friendly & Professional Team", desc: "Our cleaners are punctual, respectful and committed to maintaining the highest cleaning standards on every visit." },
+  { title: "Tailored Cleaning Plans", desc: "Whether you need weekly, fortnightly or monthly cleaning, we'll customise a cleaning schedule that suits your lifestyle, family and budget." },
+  { title: "Premium Equipment & Professional Cleaning Products", desc: "We use professional-grade equipment and quality cleaning products to achieve consistently outstanding results." },
+  { title: "100% Satisfaction Guarantee", desc: "If you're not completely satisfied with any cleaning-related area, simply let us know within 24 hours, and we'll return to rectify it free of charge." }
+];
+
+const CUSTOMER_PROMISES = [
+  "Honest advice",
+  "Fair pricing",
+  "Reliable service",
+  "Exceptional attention to detail",
+  "Long-term customer relationships"
+];
+
 /* ============================================================
    STATE MACHINE (useReducer)
    ============================================================ */
@@ -1055,7 +1074,81 @@ function HomePage({ dispatch }: { dispatch: Dispatch }) {
     <>
       <HeroSection dispatch={dispatch} />
       <StatsBand />
+      
+      {/* --- NEW CLIENT COPY SECTION --- */}
       <section className="bg-white py-16 sm:py-20">
+        <Container>
+          <Reveal className="max-w-3xl">
+            <Eyebrow>Why Choose Us</Eyebrow>
+            <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
+              Why Choose Greenlight Cleaning?
+            </h2>
+            <p className="mt-4 text-lg font-bold text-slate-900">
+              More Than Just a Cleaning Service: A Team You Can Trust
+            </p>
+            <p className="mt-2 text-slate-600">
+              At Greenlight Cleaning, we believe that great cleaning is about more than simply making your home look tidy. It's about delivering reliable service, honest pricing and complete peace of mind every time we visit.
+            </p>
+          </Reveal>
+
+          <div className="mt-12">
+            <Reveal>
+              <h3 className="text-2xl font-black tracking-tight text-slate-900 mb-6">Why Melbourne Families Choose Us</h3>
+            </Reveal>
+            <div className="grid gap-6 md:grid-cols-2">
+              {WHY_CHOOSE_US_REASONS.map((r, i) => (
+                <Reveal key={i} delay={i * 0.05} className="gl-elevate rounded-2xl border border-slate-200 p-6 bg-white flex flex-col h-full">
+                   <div className="flex items-start gap-3">
+                     <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
+                     <div>
+                       <h4 className="font-bold text-slate-900 leading-snug">{r.title}</h4>
+                       <p className="mt-2 text-sm leading-relaxed text-slate-600">{r.desc}</p>
+                     </div>
+                   </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+
+          <Reveal className="mt-12 rounded-3xl bg-slate-50 p-8 sm:p-10 border border-slate-100 text-center flex flex-col items-center">
+            <h3 className="text-2xl font-black tracking-tight text-slate-900">Our Promise to Every Customer</h3>
+            <p className="mt-4 text-slate-600 max-w-2xl mx-auto font-medium">
+              We don't measure success by how many houses we clean each day.<br/>
+              We measure success by how many customers continue to trust us year after year.
+            </p>
+            
+            <div className="mt-8 bg-white rounded-2xl p-6 border border-slate-200 w-full max-w-xl">
+               <p className="font-bold text-slate-900 mb-4 text-left">Our commitment is simple:</p>
+               <ul className="grid sm:grid-cols-2 gap-3 text-left">
+                 {CUSTOMER_PROMISES.map((p, i) => (
+                   <li key={i} className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                     <Check className="h-4 w-4 text-emerald-500" /> {p}
+                   </li>
+                 ))}
+               </ul>
+            </div>
+            
+            <p className="mt-8 text-slate-600 max-w-2xl mx-auto">
+              We believe professional cleaning should always be transparent, personalised and reasonably priced.<br/>
+              With Greenlight Cleaning, you'll never pay for cleaning you don't need, you'll only pay for the cleaning your home actually requires.
+            </p>
+          </Reveal>
+
+          <Reveal className="mt-12 flex flex-col items-center text-center">
+             <h3 className="text-xl font-black tracking-tight text-slate-900">Request Your Free Quote Today</h3>
+             <p className="mt-3 text-slate-600 max-w-2xl">
+               Whether you're looking for regular home cleaning or simply want professional advice on the best cleaning schedule for your home, we're here to help. Contact Greenlight Cleaning today for a free, no-obligation quote and discover why so many Melbourne families trust us with their homes.
+             </p>
+             <div className="mt-6">
+               <EmeraldButton href={WA} className="text-base shadow-emerald-500/20">
+                 <WhatsAppIcon className="h-5 w-5" /> Request a free quote
+               </EmeraldButton>
+             </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      <section className="bg-white py-16 sm:py-20 border-t border-slate-100">
         <Container>
           <Reveal className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl">
