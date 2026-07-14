@@ -97,12 +97,75 @@ const SERVICES: Record<string, Service> = {
     icon: "home",
     name: "Regular Domestic Cleaning",
     summary: "Scheduled home cleans that keep every room consistently fresh.",
-    groups: [
-      { title: "General", items: ["Dusting of tables, sills, cobwebs, skirting boards and bed frames", "Vacuuming of all floors and carpets", "Mopping of all hard floors"] },
-      { title: "Kitchen", items: ["Benchtops and cupboard faces", "Sinks, cooktops and splashbacks", "Microwave, oven exterior and fridge exterior"] },
-      { title: "Bathroom", items: ["Basins, bathtubs and showers", "Toilets and mirrors", "Floors"] }
+    intro: [
+      "Our regular domestic cleaning service is designed to keep your home fresh, hygienic and well maintained. The first visit is usually a more detailed clean to bring the property up to our maintenance standard, followed by regular ongoing visits."
     ],
-    exclusions: ["Oven interior", "Rangehood degreasing", "Window glass", "Wall marks", "Soft Venetian blinds"],
+    groups: [
+      {
+        title: "General Areas",
+        items: [
+          "Dust and wipe accessible surfaces",
+          "Vacuum carpets and rugs",
+          "Mop hard floors",
+          "Empty bins and replace liners",
+          "Dust skirting boards, window sills and furniture surfaces",
+          "Remove cobwebs where accessible",
+          "Tidy and straighten rooms"
+        ]
+      },
+      {
+        title: "Kitchen",
+        items: [
+          "Wipe benchtops and splashbacks",
+          "Clean sink and taps",
+          "Clean stovetop and exterior of rangehood",
+          "Wipe exterior of microwave",
+          "Clean exterior of oven and dishwasher",
+          "Wipe cupboard fronts and handles",
+          "Clean exterior of refrigerator",
+          "Spot clean fingerprints and marks"
+        ]
+      },
+      {
+        title: "Bathrooms and Toilets",
+        items: [
+          "Clean and disinfect toilet",
+          "Clean shower screens and shower area",
+          "Clean bathtub",
+          "Clean vanity, basin and taps",
+          "Polish mirrors",
+          "Wipe bathroom surfaces",
+          "Vacuum and mop floors"
+        ]
+      },
+      {
+        title: "Bedrooms",
+        items: [
+          "Dust furniture and accessible surfaces",
+          "Vacuum or mop floors",
+          "Make beds if requested",
+          "Empty bins"
+        ]
+      }
+    ],
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Optional Extras (Additional Charges May Apply)",
+        items: [
+          "Interior oven cleaning",
+          "Rangehood filter cleaning",
+          "Interior windows and glass doors",
+          "Wall mark removal",
+          "Blind cleaning",
+          "Inside fridge cleaning",
+          "Inside cupboards and drawers",
+          "Bed linen change",
+          "Balcony cleaning",
+          "Garage sweeping"
+        ]
+      }
+    ],
     pricing: {
       type: "single",
       header: ["Configuration", "Price (Cash)"],
@@ -282,7 +345,7 @@ const SERVICES: Record<string, Service> = {
           {
             title: "Windows and Blinds",
             items: [
-              ["Window glass cleaning", "from $15 per panel"],
+              ["Window glass cleaning", "from $10 per panel"],
               ["Blind cleaning", "$15 to $40 per blind"]
             ],
             note: "Exterior windows are cleaned only where they can be accessed safely. High windows, heavily soiled windows, security screens and specialised access may incur additional charges."
@@ -349,27 +412,9 @@ const SERVICES: Record<string, Service> = {
     quote: true
   },
 
-  "post-renovation": {
-    icon: "paint",
-    name: "Post Renovation Cleaning",
-    summary: "Removes renovation dust and residue from finished spaces.",
-    groups: [{
-      title: "Scope of work",
-      items: [
-        "Construction dust removed from all surfaces",
-        "Paint and adhesive spot removal",
-        "Fixture and fitting detail",
-        "Windows and frames",
-        "Floor wash and vacuum",
-        "Vents and skirting dusting"
-      ]
-    }],
-    quote: true
-  },
-
   "builders": {
     icon: "hammer",
-    name: "Builder's Cleaning & Post Construction Cleaning",
+    name: "Builder's Cleaning & Post Renovation Cleaning",
     summary: "Rough, sparkle and final cleans for new builds and sites.",
     intro: [
       "Our Builder's Cleaning service is designed for newly constructed homes, renovations, extensions and commercial projects that require detailed cleaning before handover or occupancy.",
@@ -1319,6 +1364,31 @@ function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
 /* ============================================================
    HERO
    ============================================================ */
+function QuickContactCluster() {
+  const channels: { href: string; Icon: React.ElementType; label: string; accent: string }[] = [
+    { href: WA, Icon: WhatsAppIcon, label: "WhatsApp", accent: "emerald" },
+    { href: SMS, Icon: Smartphone, label: "Text", accent: "slate" },
+    { href: MAILTO, Icon: Mail, label: "Email", accent: "slate" }
+  ];
+  return (
+    <div className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6">
+      <Reveal delay={0.05} className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 p-1.5 backdrop-blur-sm">
+        {channels.map((c, i) => (
+          <a
+            key={i}
+            href={c.href}
+            aria-label={`Contact us via ${c.label}`}
+            title={`Contact us via ${c.label}`}
+            className={`gl-tap flex h-9 w-9 items-center justify-center rounded-full transition-colors sm:h-10 sm:w-10 ${c.accent === "emerald" ? "bg-emerald-500 text-white" : "bg-white/10 text-white hover:bg-white/20"}`}
+          >
+            <c.Icon className="h-4 w-4" />
+          </a>
+        ))}
+      </Reveal>
+    </div>
+  );
+}
+
 function HeroSection({ dispatch }: { dispatch: Dispatch }) {
   const highlights: IconItem[] = [
     { icon: Shield, text: "Bond back focused end of lease cleans" },
@@ -1329,6 +1399,7 @@ function HeroSection({ dispatch }: { dispatch: Dispatch }) {
   return (
     <section className="relative overflow-hidden bg-slate-900 text-white">
       <div className="gl-hero-glow" />
+      <QuickContactCluster />
       <Container className="relative grid items-center gap-12 py-20 lg:grid-cols-12 lg:py-28">
         <div className="lg:col-span-7">
           <Reveal>
