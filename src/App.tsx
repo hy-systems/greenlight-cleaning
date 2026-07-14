@@ -21,16 +21,23 @@ const WA = "https://wa.me/61430230971?text=Hi%20Greenlight%2C%20I%27d%20like%20a
    ============================================================ */
 interface ServiceGroup { title: string; items: string[]; }
 interface Pricing { type: string; header: string[]; rows: string[][]; }
+interface ExtraCategory { title: string; items: [string, string][]; note?: string; }
+type ContentBlock =
+  | { kind: "text"; title?: string; body?: string; items?: string[] }
+  | { kind: "extras"; title: string; intro?: string[]; categories: ExtraCategory[] }
+  | { kind: "rates"; title: string; intro?: string; headers: string[]; rows: string[][]; footnote?: string };
 interface Service {
   icon: string;
   name: string;
   summary: string;
+  intro?: string[];
+  introList?: { title: string; items: string[] };
   groups: ServiceGroup[];
   exclusions?: string[];
   chips?: string[];
   chipsTitle?: string;
   pricing?: Pricing;
-  extras?: string[][];
+  contentBlocks?: ContentBlock[];
   rate?: string;
   note?: string;
   quote?: boolean;
@@ -108,9 +115,9 @@ const SERVICES: Record<string, Service> = {
         ["4 Bed / 2 Bath, single storey", "$150 to $160"],
         ["4 Bed / 2 Bath, double storey", "$160 to $170"],
         ["4 Bed / 3 Bath, single storey", "$170 to $180"],
-        ["4 Bed / 3 Bath, double storey", "$180 to $200"],
-        ["5 Bed / 3 Bath", "$200 to $220"],
-        ["5 Bed / 4 Bath", "$220 to $250"]
+        ["4 Bed / 3 Bath, double storey", "$200 to $250"],
+        ["5 Bed / 3 Bath", "$220 to $270"],
+        ["5 Bed / 4 Bath", "$240 to $300"]
       ]
     },
     note: "Initial or first cleans are charged at 1.5x to 2x the regular rate."
@@ -144,22 +151,70 @@ const SERVICES: Record<string, Service> = {
     icon: "key",
     name: "End of Lease Cleaning",
     summary: "Bond back focused cleans aligned to real estate agency requirements.",
-    groups: [{
-      title: "Scope of work",
-      items: [
-        "Carpet steam cleaning",
-        "Internal and external windows",
-        "Window sills and tracks",
-        "Full bathroom detail",
-        "Full kitchen detail",
-        "Dusting and cobweb removal",
-        "Blinds and light fittings",
-        "Skirting boards",
-        "Laundry",
-        "Cupboards emptied and wiped",
-        "Garage sweeping"
-      ]
-    }],
+    intro: [
+      "Our comprehensive end of lease cleaning service is designed to help tenants prepare their property for the final inspection and maximise their chances of receiving their bond back."
+    ],
+    groups: [
+      {
+        title: "General & Carpet Care",
+        items: [
+          "Carpet steam cleaning and deodorising",
+          "Vacuuming of all carpeted areas",
+          "Cleaning of interior windows",
+          "Cleaning of accessible exterior windows",
+          "Cleaning of interior window sills and window tracks"
+        ]
+      },
+      {
+        title: "Complete Bathroom Cleaning",
+        items: [
+          "Showers and shower screens",
+          "Bathtubs",
+          "Toilets",
+          "Sinks and basins",
+          "Mirrors",
+          "Bathroom surfaces",
+          "Accessible exhaust fans and air vents"
+        ]
+      },
+      {
+        title: "Complete Kitchen Cleaning",
+        items: [
+          "Stovetops",
+          "Benchtops",
+          "Splashbacks",
+          "Rangehood and accessible filters",
+          "Oven interior and exterior",
+          "Dishwasher interior and exterior",
+          "Pantry surfaces",
+          "Kitchen sink and taps"
+        ]
+      },
+      {
+        title: "Cupboards & Laundry",
+        items: [
+          "Cleaning of cupboards, shelves and drawers, inside and outside, provided they are empty",
+          "Full laundry cleaning, including sinks, taps, cupboards and surfaces",
+          "Cleaning of wardrobe mirrors, frames and tracks",
+          "Sweeping of the garage floor",
+          "Removal of cobwebs from the garage"
+        ]
+      },
+      {
+        title: "Finishing Touches",
+        items: [
+          "Dusting throughout the property",
+          "Removal of cobwebs throughout the property",
+          "Vacuuming and mopping of all hard and wet-area floors",
+          "Dusting and wiping of blinds",
+          "Cleaning of accessible light fittings",
+          "Cleaning of skirting boards",
+          "Cleaning of power points and light switches",
+          "Cleaning of doors, door frames and handles",
+          "Spot cleaning of removable wall marks"
+        ]
+      }
+    ],
     chipsTitle: "Agency approved",
     chips: ["Ray White", "Hodges", "Jellis Craig", "Barry Plant", "Buxton", "Biggin & Scott", "Marshall White", "Woodards", "Harcourts", "Belle Property", "McGrath", "LJ Hooker", "Noel Jones", "OBrien Real Estate"],
     pricing: {
@@ -177,17 +232,102 @@ const SERVICES: Record<string, Service> = {
         ["5 Bed / 3 Bath / 2 Living", "$560", "$680"]
       ]
     },
-    extras: [
-      ["Wall Cleaning", "$50/hr"],
-      ["Fridge", "$50 to $100"],
-      ["Microwave", "$15"],
-      ["Oven 600mm", "$60"],
-      ["Oven 900mm", "$80"],
-      ["Windows", "$10/panel"],
-      ["Venetian Blinds", "$30 to $50"],
-      ["Balcony", "$20 to $60"]
-    ],
-    note: "Pricing aligned to agent bond inspection requirements."
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Bond Back Support",
+        body: "We follow a detailed end of lease cleaning checklist commonly required by property managers and real estate agents. If your property manager identifies any cleaning-related issues covered by our original service, please contact us promptly so we can review the request."
+      },
+      {
+        kind: "text",
+        title: "Please Note",
+        items: [
+          "The property must be vacant and personal belongings must be removed before cleaning begins.",
+          "Cupboards, drawers, shelves and wardrobes must be empty for interior cleaning.",
+          "Exterior window cleaning is limited to safely accessible areas.",
+          "Permanent stains, damage, mould, discolouration, worn surfaces and marks that cannot be removed through standard cleaning are not considered cleaning defects.",
+          "Additional charges may apply for heavily soiled properties, excessive grease, pet hair, mould, high windows, balconies, garages or areas requiring specialised equipment.",
+          "Carpet steam cleaning may be arranged as part of the service where requested.",
+          "A Tax Invoice can be provided."
+        ]
+      },
+      {
+        kind: "extras",
+        title: "Additional Services & Charges",
+        intro: [
+          "Every property is different in size, layout and condition, and individual property managers may have different inspection requirements. Our standard end of lease cleaning package covers the items listed above. Services outside the standard scope may incur additional charges.",
+          "The following prices are general guides only. Final pricing will depend on the size, condition, accessibility and amount of work required."
+        ],
+        categories: [
+          {
+            title: "Walls, Mould and Repairs",
+            items: [
+              ["Wall mark cleaning", "from $15 per wall"],
+              ["Minor wall patching and touch-up painting", "from $80"],
+              ["Mould treatment and removal", "from $20"],
+              ["Drain cleaning or minor blockage clearing", "from $30"]
+            ],
+            note: "Please note that permanent stains, damaged paint, water damage, structural mould and marks that cannot be removed through normal cleaning may require repair or specialist treatment."
+          },
+          {
+            title: "Kitchen Appliances",
+            items: [
+              ["Refrigerator cleaning", "$20 to $60 each"],
+              ["Microwave cleaning", "$15 each"],
+              ["Oven cleaning", "$30 to $80 each"],
+              ["Air-conditioning filter cleaning", "$15 each"]
+            ],
+            note: "Pricing may vary depending on the size, grease build-up and overall condition of the appliance."
+          },
+          {
+            title: "Windows and Blinds",
+            items: [
+              ["Window glass cleaning", "from $15 per panel"],
+              ["Blind cleaning", "$15 to $40 per blind"]
+            ],
+            note: "Exterior windows are cleaned only where they can be accessed safely. High windows, heavily soiled windows, security screens and specialised access may incur additional charges."
+          },
+          {
+            title: "Additional Rooms and Areas",
+            items: [
+              ["Additional living room", "$40"],
+              ["Additional separate toilet", "$25"],
+              ["Additional bathroom", "$50"],
+              ["Carpeted stairs", "$50 per level"],
+              ["Non-carpeted stairs", "$20 per level"],
+              ["Garage, balcony, courtyard or other outdoor area", "$20 to $60 per area"]
+            ]
+          },
+          {
+            title: "Carpet and Pet Hair",
+            items: [
+              ["Excessive pet hair removal from carpet", "$20 to $80 per room"]
+            ],
+            note: "This charge applies where additional vacuuming, brushing or specialised pet-hair removal is required beyond normal carpet vacuuming or steam cleaning."
+          },
+          {
+            title: "Rubbish Removal",
+            items: [
+              ["Rubbish packing and bagging", "from $30"],
+              ["Rubbish disposal", "$10 per bag"]
+            ],
+            note: "Additional charges may apply for large, heavy, hazardous or bulky items. Rubbish disposal is subject to available space and local disposal requirements."
+          }
+        ]
+      },
+      {
+        kind: "text",
+        title: "Important Pricing Information",
+        items: [
+          "All additional services must be confirmed before work begins wherever possible.",
+          "Photos or an on-site inspection may be required before a final quotation can be provided.",
+          "Prices may increase for heavily soiled properties, excessive grease, mould, pet hair, rubbish, difficult access or additional real estate agent requirements.",
+          "Repair work, painting, specialist mould treatment and rubbish removal are separate from standard cleaning.",
+          "Any additional work requested by the tenant, landlord or property manager after the original cleaning may incur a return service fee.",
+          "Prices are subject to GST where applicable."
+        ]
+      }
+    ]
   },
 
   "move-in": {
@@ -229,19 +369,128 @@ const SERVICES: Record<string, Service> = {
 
   "builders": {
     icon: "hammer",
-    name: "Builders Cleaning",
+    name: "Builder's Cleaning & Post Construction Cleaning",
     summary: "Rough, sparkle and final cleans for new builds and sites.",
-    groups: [{
-      title: "Scope of work",
-      items: [
-        "Rough clean during build stage",
-        "Sparkle clean before handover",
-        "Debris and dust removal",
-        "Sticker and label removal from windows and appliances",
-        "Fixture polishing",
-        "Final presentation detail"
-      ]
-    }],
+    intro: [
+      "Our Builder's Cleaning service is designed for newly constructed homes, renovations, extensions and commercial projects that require detailed cleaning before handover or occupancy.",
+      "Construction sites generate large amounts of dust, debris, adhesive residue and building materials that require specialised cleaning techniques and equipment. Our experienced team works with builders, developers, project managers, real estate agents and homeowners to ensure the property is ready for handover."
+    ],
+    groups: [
+      {
+        title: "Removal of Construction Dust",
+        items: [
+          "Removal of fine construction dust from all accessible surfaces",
+          "Dusting of walls, ceilings and cornices",
+          "Dust removal from skirting boards and architraves",
+          "Cleaning of doors, frames and handles",
+          "Cleaning of wardrobes, shelves and cupboards",
+          "Cleaning of joinery and cabinetry",
+          "Dust removal from light fittings and switches",
+          "Cleaning of power points and electrical fittings",
+          "Cleaning of air-conditioning vents and exhaust vents"
+        ]
+      },
+      {
+        title: "Window and Glass Cleaning",
+        items: [
+          "Cleaning of interior windows and accessible exterior windows",
+          "Removal of stickers and labels from glass surfaces",
+          "Cleaning of window frames, tracks and sills",
+          "Removal of paint splashes and silicone residue from glass where possible",
+          "Cleaning of mirrors and glass balustrades"
+        ]
+      },
+      {
+        title: "Kitchen Cleaning",
+        items: [
+          "Cleaning of kitchen cabinetry inside and outside",
+          "Cleaning of benchtops and splashbacks",
+          "Cleaning of sinks and taps",
+          "Cleaning of rangehoods and filters",
+          "Cleaning of ovens and cooktops",
+          "Cleaning of dishwashers and appliances",
+          "Removal of dust from drawers and pantry shelving"
+        ]
+      },
+      {
+        title: "Bathroom Cleaning",
+        items: [
+          "Cleaning and polishing of showers and shower screens",
+          "Cleaning of bathtubs and basins",
+          "Cleaning and sanitising of toilets",
+          "Cleaning of mirrors and vanities",
+          "Cleaning of tiles and grout surfaces",
+          "Removal of construction dust from vents and exhaust fans",
+          "Removal of silicone smears where possible"
+        ]
+      },
+      {
+        title: "Floors",
+        items: [
+          "Vacuuming of all floor surfaces",
+          "Removal of construction dust from corners and edges",
+          "Mopping and detailing of hard floors",
+          "Cleaning and vacuuming of carpeted areas",
+          "Removal of minor paint spots and residue where possible"
+        ]
+      },
+      {
+        title: "Detailed Finishing Touches",
+        items: [
+          "Cleaning of staircases and handrails",
+          "Cleaning of built-in furniture and shelving",
+          "Removal of cobwebs",
+          "Cleaning of garage areas",
+          "Cleaning of entry areas and external pathways where required",
+          "Final presentation cleaning prior to handover"
+        ]
+      }
+    ],
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Optional Additional Services",
+        body: "Additional services can be arranged where required, including:",
+        items: [
+          "Pressure washing",
+          "Exterior building wash-down",
+          "High window cleaning",
+          "Balcony and outdoor area cleaning",
+          "Sticker and adhesive removal",
+          "Paint overspray removal",
+          "Silicone residue removal",
+          "Builders waste and rubbish removal",
+          "Carpet steam cleaning",
+          "Floor scrubbing and machine polishing",
+          "Tile and grout detailing"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Multi-Stage Builder's Cleans Available",
+        body: "We can provide cleaning services at different stages of construction, including:",
+        items: [
+          "Initial Builders Clean: Removal of heavy dust and construction debris during the build process.",
+          "Final Builders Clean: Detailed cleaning before practical completion and handover.",
+          "Handover or Sparkle Clean: Final presentation clean to ensure the property is ready for occupancy, photography or client handover."
+        ]
+      },
+      {
+        kind: "text",
+        title: "Please Note",
+        body: "Builder's cleaning requirements vary significantly depending on the size of the property, the stage of construction and the level of dust and debris present. Pricing is based on:",
+        items: [
+          "Property size",
+          "Number of rooms and bathrooms",
+          "Level of dust and contamination",
+          "Accessibility",
+          "Type of flooring and surfaces",
+          "Extent of paint, silicone and adhesive residue",
+          "Site condition and access requirements"
+        ]
+      }
+    ],
+    note: "Site inspections or photos are usually required before a quotation can be provided.",
     quote: true
   },
 
@@ -249,77 +498,538 @@ const SERVICES: Record<string, Service> = {
     icon: "tag",
     name: "House for Sale Cleaning",
     summary: "Presentation ready cleans for inspections and photography.",
-    groups: [{
-      title: "Scope of work",
-      items: [
-        "Presentation clean for open inspections",
-        "Photography ready detailing",
-        "Kitchen and bathroom detail",
-        "Glass and mirror polish",
-        "Dusting and vacuuming throughout",
-        "Entry and exterior tidy"
-      ]
-    }],
+    intro: [
+      "Our House for Sale Cleaning service is specifically designed to prepare your property for professional photography, open inspections and sale campaigns.",
+      "A professionally cleaned home creates a stronger first impression, improves presentation and helps potential buyers focus on the property's features rather than its condition."
+    ],
+    groups: [
+      {
+        title: "General Cleaning Throughout the Property",
+        items: [
+          "Removal of dust from all accessible surfaces",
+          "Dusting of skirting boards and architraves",
+          "Cleaning of doors, frames and handles",
+          "Cleaning of power points and light switches",
+          "Removal of cobwebs throughout the property",
+          "Vacuuming all carpets and rugs",
+          "Mopping all hard floor surfaces",
+          "Spot cleaning of wall marks where possible"
+        ]
+      },
+      {
+        title: "Kitchen Presentation Cleaning",
+        items: [
+          "Cleaning and polishing all benchtops",
+          "Cleaning of splashbacks and tiled areas",
+          "Cleaning of cupboards and drawers externally",
+          "Internal cleaning of empty cupboards if required",
+          "Cleaning of sinks and taps",
+          "Cleaning and polishing of appliances",
+          "Cleaning of stovetops and rangehoods",
+          "Oven cleaning where required",
+          "Cleaning of pantry shelving and storage areas"
+        ]
+      },
+      {
+        title: "Bathroom Presentation Cleaning",
+        items: [
+          "Cleaning and polishing of shower screens",
+          "Removal of soap scum and water marks",
+          "Cleaning and sanitising of toilets",
+          "Cleaning of bathtubs and basins",
+          "Cleaning and polishing of mirrors",
+          "Cleaning of vanities and cabinetry",
+          "Cleaning of tiles and grout surfaces",
+          "Cleaning of exhaust fans and air vents"
+        ]
+      },
+      {
+        title: "Window and Glass Cleaning",
+        items: [
+          "Cleaning of interior windows",
+          "Cleaning of accessible exterior windows",
+          "Cleaning of window tracks and window sills",
+          "Cleaning of mirrors throughout the property",
+          "Cleaning of glass doors and glass balustrades"
+        ]
+      },
+      {
+        title: "Bedrooms and Living Areas",
+        items: [
+          "Dusting and cleaning of wardrobes",
+          "Cleaning of wardrobe mirrors, tracks and frames",
+          "Cleaning of shelves and built-in cabinetry",
+          "Cleaning of blinds and shutters",
+          "Detailed dust removal from display areas"
+        ]
+      },
+      {
+        title: "Lighting and Presentation Details",
+        items: [
+          "Cleaning of light fittings and ceiling fans",
+          "Cleaning of air-conditioning vents",
+          "Removal of fingerprints from doors and glass",
+          "Polishing of stainless steel and chrome fixtures",
+          "Final presentation detailing prior to photography or inspections"
+        ]
+      },
+      {
+        title: "Outdoor Areas",
+        items: [
+          "Sweeping of garages and storage areas",
+          "Removal of cobwebs from external areas",
+          "Sweeping of balconies, patios and alfresco areas",
+          "Cleaning of entry areas and front porches",
+          "Basic presentation cleaning of outdoor entertaining areas"
+        ]
+      }
+    ],
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Optional Premium Presentation Services",
+        body: "Additional services can be arranged where required:",
+        items: [
+          "Carpet steam cleaning",
+          "Pressure washing",
+          "High window cleaning",
+          "Exterior house washing",
+          "Driveway and pathway pressure cleaning",
+          "Garden tidy-up",
+          "Lawn mowing and edging",
+          "Rubbish removal",
+          "Wall washing",
+          "Minor wall repairs and touch-up painting",
+          "Mould treatment and removal",
+          "Decluttering assistance",
+          "Furniture staging preparation",
+          "Pre-photography sparkle clean"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Why Choose House for Sale Cleaning?",
+        body: "A professionally presented home can:",
+        items: [
+          "Create a stronger first impression",
+          "Improve online listing photos",
+          "Enhance open inspection presentation",
+          "Help attract more buyers",
+          "Increase buyer confidence",
+          "Potentially improve sale outcomes and reduce time on market"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Please Note",
+        body: "Every property is different and sale preparation requirements vary depending on the property's condition, size and marketing strategy. Photos or an on-site inspection are usually required before providing an accurate quotation."
+      }
+    ],
     quote: true
   },
 
   "ndis": {
     icon: "access",
-    name: "NDIS Cleaning",
+    name: "NDIS Cleaning Services",
     summary: "Plan aligned domestic support for NDIS participants.",
     rate: "$58.03 per hour",
-    groups: [{
-      title: "Scope of work",
-      items: [
-        "Domestic assistance tailored to your plan",
-        "Kitchen and bathroom cleaning",
-        "Floors vacuumed and mopped",
-        "Dusting and surfaces",
-        "Linen change",
-        "Rubbish removal"
-      ]
-    }],
+    intro: [
+      "Greenlight Cleaning provides professional household cleaning and domestic assistance services for NDIS participants, helping individuals maintain a safe, clean and comfortable living environment while supporting independence and wellbeing.",
+      "We work with self-managed participants, plan-managed participants, support coordinators, families and carers to provide flexible and reliable support services tailored to individual needs."
+    ],
+    groups: [
+      {
+        title: "General Household Cleaning",
+        items: [
+          "Dusting all accessible surfaces",
+          "Vacuuming carpets and rugs",
+          "Mopping hard floors",
+          "Cleaning skirting boards",
+          "Cleaning light switches and power points",
+          "Removing cobwebs",
+          "Emptying rubbish bins"
+        ]
+      },
+      {
+        title: "Kitchen Cleaning",
+        items: [
+          "Cleaning benchtops and splashbacks",
+          "Cleaning sinks and taps",
+          "Cleaning stovetops",
+          "Cleaning microwave interiors and exteriors",
+          "Cleaning appliance exteriors",
+          "Cleaning cupboard fronts and pantry areas"
+        ]
+      },
+      {
+        title: "Bathroom Cleaning",
+        items: [
+          "Cleaning and sanitising toilets",
+          "Cleaning showers and shower screens",
+          "Cleaning bathtubs",
+          "Cleaning basins and vanities",
+          "Cleaning mirrors",
+          "Mopping bathroom floors",
+          "Sanitising high-touch surfaces"
+        ]
+      },
+      {
+        title: "Bedroom and Living Area Cleaning",
+        items: [
+          "Dusting furniture and surfaces",
+          "Vacuuming and mopping floors",
+          "General tidying assistance",
+          "Cleaning bedside tables and shelving"
+        ]
+      },
+      {
+        title: "Laundry Assistance",
+        items: [
+          "Washing clothes and linen",
+          "Hanging washing to dry",
+          "Folding clothes",
+          "Putting away laundry",
+          "Changing bed linen"
+        ]
+      },
+      {
+        title: "Additional Household Assistance",
+        items: [
+          "Dishwashing",
+          "Kitchen tidying",
+          "Household organisation assistance",
+          "Maintaining a safe and tidy living environment"
+        ]
+      }
+    ],
     chipsTitle: "Providers we work with",
     chips: NDIS_PROVIDERS,
-    note: "Plan managed, self managed and agency referred clients welcome."
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Service Options",
+        items: [
+          "Weekly services",
+          "Fortnightly services",
+          "Monthly services",
+          "One-off cleaning services",
+          "Additional support during recovery periods or hospital discharge"
+        ]
+      },
+      {
+        kind: "rates",
+        title: "NDIS Pricing",
+        intro: "Our domestic assistance services are charged in accordance with the current NDIS Pricing Arrangements and Price Limits under House Cleaning and Other Household Activities.",
+        headers: ["Financial Year", "Hourly Rate", "GST"],
+        rows: [
+          ["2025-2026", "$58.03 per hour", "No GST"],
+          ["Future Financial Years", "Subject to annual NDIA pricing updates", "Subject to applicable NDIS rules"]
+        ],
+        footnote: "NDIS pricing is reviewed annually and usually changes from 1 July each year."
+      },
+      {
+        kind: "text",
+        title: "Why Choose Greenlight Cleaning?",
+        items: [
+          "Experienced and reliable cleaning team",
+          "Friendly and respectful staff",
+          "Flexible scheduling options",
+          "Public Liability Insurance",
+          "Police checked staff",
+          "Services tailored to participant goals and support needs",
+          "Support Coordinators and Plan Managers welcome"
+        ]
+      }
+    ]
   },
 
-  "home-care": {
+  "aged-care": {
     icon: "heart",
-    name: "Home Care Cleaning",
-    summary: "Ongoing domestic support for ageing and home care clients.",
-    rate: "$58.03 per hour",
-    groups: [{
-      title: "Scope of work",
+    name: "Aged Care Cleaning Services",
+    summary: "Respectful, professional domestic support for older Australians living independently.",
+    rate: "From $55 per hour",
+    intro: [
+      "Greenlight Cleaning provides reliable, respectful and professional cleaning and domestic assistance services for older Australians who wish to continue living safely, comfortably and independently in their own homes.",
+      "We understand that maintaining a clean and organised home can become more difficult with age, reduced mobility or health conditions. Our experienced team provides personalised support tailored to each client's individual needs."
+    ],
+    introList: {
+      title: "We welcome",
       items: [
-        "Ongoing light domestic duties",
-        "Kitchen and bathroom cleaning",
-        "Floors vacuumed and mopped",
-        "Laundry support",
-        "Dusting and tidying"
+        "Support at Home participants",
+        "Commonwealth Home Support Programme (CHSP) participants",
+        "Privately funded clients",
+        "Family-arranged services",
+        "Case managers and care coordinators"
       ]
-    }],
-    chipsTitle: "Providers we work with",
-    chips: NDIS_PROVIDERS,
-    note: "Suitable for Home Care Package and aged support clients."
+    },
+    groups: [
+      {
+        title: "General Household Cleaning",
+        items: [
+          "Dusting furniture and accessible surfaces",
+          "Vacuuming carpets and rugs",
+          "Mopping hard floors",
+          "Cleaning skirting boards",
+          "Cleaning light switches and power points",
+          "Removing cobwebs",
+          "Emptying rubbish bins"
+        ]
+      },
+      {
+        title: "Kitchen Cleaning",
+        items: [
+          "Cleaning kitchen benchtops and splashbacks",
+          "Cleaning sinks and taps",
+          "Cleaning stovetops",
+          "Cleaning microwave interiors and exteriors",
+          "Cleaning appliance exteriors",
+          "Cleaning cupboard fronts and pantry areas"
+        ]
+      },
+      {
+        title: "Bathroom Cleaning",
+        items: [
+          "Cleaning and sanitising toilets",
+          "Cleaning showers and shower screens",
+          "Cleaning bathtubs",
+          "Cleaning basins and vanities",
+          "Cleaning mirrors",
+          "Mopping bathroom floors",
+          "Sanitising high-touch surfaces"
+        ]
+      },
+      {
+        title: "Bedroom and Living Areas",
+        items: [
+          "Dusting furniture and shelving",
+          "Vacuuming and mopping floors",
+          "Making beds",
+          "Changing bed linen",
+          "General tidying assistance"
+        ]
+      },
+      {
+        title: "Laundry Assistance",
+        items: [
+          "Washing clothes and linen",
+          "Hanging washing to dry",
+          "Folding clothes",
+          "Putting away laundry",
+          "Changing bedding and towels"
+        ]
+      },
+      {
+        title: "Additional Household Assistance",
+        items: [
+          "Dishwashing",
+          "Kitchen tidying",
+          "Household organisation assistance",
+          "Maintaining a safe and tidy living environment"
+        ]
+      }
+    ],
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Flexible Service Options",
+        items: [
+          "Weekly services",
+          "Fortnightly services",
+          "Monthly services",
+          "One-off cleaning services",
+          "Additional support following illness, surgery or hospital discharge"
+        ]
+      },
+      {
+        kind: "rates",
+        title: "Hourly Rates",
+        headers: ["Service Type", "Hourly Rate", "GST"],
+        rows: [
+          ["Government Funded Aged Care Services (Support at Home / CHSP)", "In accordance with individual provider agreements and funding arrangements", "Usually GST Free"],
+          ["Private Aged Care Cleaning Services", "From $55 per hour", "GST may apply"],
+          ["Deep Cleaning or Additional Services", "Quoted individually", "GST may apply"]
+        ],
+        footnote: "Please note that aged care pricing is not nationally fixed and may vary depending on funding arrangements, property size, service frequency and individual support requirements."
+      },
+      {
+        kind: "text",
+        title: "Why Choose Greenlight Cleaning?",
+        items: [
+          "Experienced and reliable cleaning team",
+          "Friendly and respectful staff",
+          "Police checked team members",
+          "Fully insured business",
+          "Flexible scheduling options",
+          "Services tailored to individual needs",
+          "Families, case managers and care coordinators welcome"
+        ]
+      }
+    ]
   },
 
   "strata": {
     icon: "layers",
     name: "Strata & Common Area Cleaning",
     summary: "Scheduled cleaning for shared residential and commercial areas.",
-    groups: [{
-      title: "Scope of work",
+    intro: [
+      "Greenlight Cleaning provides reliable and professional strata and common area cleaning services for apartment buildings, townhouse complexes, body corporates, commercial buildings and managed properties.",
+      "We understand that clean and well-maintained common areas create a positive first impression for residents, visitors and tenants while helping preserve the value and presentation of the property."
+    ],
+    introList: {
+      title: "We work with",
       items: [
-        "Lobbies and foyers",
-        "Hallways and corridors",
-        "Lift interiors",
-        "Stairwells and handrails",
-        "Glass entry doors",
-        "Bin rooms and rubbish areas",
-        "Car park sweeping"
+        "Owners Corporations",
+        "Body Corporate Managers",
+        "Property Managers",
+        "Real Estate Agencies",
+        "Commercial Building Managers",
+        "Residential Apartment Complexes",
+        "Townhouse Developments"
       ]
-    }],
+    },
+    groups: [
+      {
+        title: "Entrance and Lobby Areas",
+        items: [
+          "Vacuuming and mopping floors",
+          "Cleaning entrance doors and glass panels",
+          "Cleaning intercom systems",
+          "Dusting furniture and decorative items",
+          "Cleaning reception areas and mailboxes",
+          "Spot cleaning fingerprints and marks",
+          "Cleaning skirting boards and corners"
+        ]
+      },
+      {
+        title: "Hallways and Corridors",
+        items: [
+          "Vacuuming carpeted hallways",
+          "Sweeping and mopping hard floors",
+          "Cleaning handrails and balustrades",
+          "Dusting ledges and window sills",
+          "Removing cobwebs",
+          "Cleaning doors and door frames",
+          "Cleaning lift lobby areas"
+        ]
+      },
+      {
+        title: "Lift Cleaning",
+        items: [
+          "Cleaning lift walls and mirrors",
+          "Cleaning lift buttons and control panels",
+          "Vacuuming or mopping lift floors",
+          "Sanitising high-touch surfaces",
+          "Removing fingerprints and smudges from stainless steel surfaces"
+        ]
+      },
+      {
+        title: "Stairwells",
+        items: [
+          "Sweeping staircases",
+          "Vacuuming carpeted stairs",
+          "Mopping hard surface stairs",
+          "Cleaning handrails",
+          "Dusting skirting boards and ledges",
+          "Removing cobwebs"
+        ]
+      },
+      {
+        title: "Shared Kitchen and Amenities Areas",
+        items: [
+          "Cleaning benchtops and tables",
+          "Cleaning sinks and taps",
+          "Cleaning microwaves and appliances",
+          "Emptying rubbish bins",
+          "Sanitising high-touch surfaces"
+        ]
+      },
+      {
+        title: "Shared Bathroom Facilities",
+        items: [
+          "Cleaning and sanitising toilets",
+          "Cleaning basins and mirrors",
+          "Cleaning showers where applicable",
+          "Refilling consumables if supplied by the client",
+          "Mopping floors and sanitising touch points"
+        ]
+      },
+      {
+        title: "External Common Areas",
+        items: [
+          "Sweeping entry areas and pathways",
+          "Sweeping courtyards and common outdoor spaces",
+          "Removing cobwebs from external areas",
+          "Cleaning outdoor furniture where required",
+          "Cleaning shared balconies and terraces"
+        ]
+      },
+      {
+        title: "Bin Rooms and Waste Areas",
+        items: [
+          "Sweeping and mopping bin rooms",
+          "Cleaning bin storage areas",
+          "Removing spills and stains",
+          "Deodorising waste areas",
+          "Cleaning bin lids and external surfaces"
+        ]
+      },
+      {
+        title: "Car Parks and Garages",
+        items: [
+          "Sweeping car park areas",
+          "Removing rubbish and debris",
+          "Cobweb removal",
+          "Cleaning access doors and common touch points"
+        ]
+      }
+    ],
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Additional Services Available",
+        items: [
+          "Pressure washing",
+          "High dusting",
+          "Window cleaning",
+          "Graffiti removal",
+          "Emergency clean-ups",
+          "Builders clean for common areas",
+          "Carpet steam cleaning",
+          "Floor scrubbing and machine polishing",
+          "Garden and outdoor maintenance coordination"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Flexible Cleaning Schedules",
+        body: "We offer:",
+        items: [
+          "Daily cleaning",
+          "Multiple visits per week",
+          "Weekly cleaning",
+          "Fortnightly cleaning",
+          "Monthly cleaning",
+          "Custom maintenance schedules"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Why Choose Greenlight Cleaning?",
+        items: [
+          "Reliable and consistent service",
+          "Fully insured business",
+          "Police checked staff",
+          "Detailed cleaning checklists",
+          "Flexible scheduling options",
+          "Experienced with strata and body corporate properties",
+          "Regular communication with property managers and committees"
+        ]
+      },
+      {
+        kind: "text",
+        body: "We understand the importance of maintaining clean, safe and welcoming common areas for residents, tenants and visitors."
+      }
+    ],
     quote: true
   }
 };
@@ -612,9 +1322,9 @@ function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
 function HeroSection({ dispatch }: { dispatch: Dispatch }) {
   const highlights: IconItem[] = [
     { icon: Shield, text: "Bond back focused end of lease cleans" },
-    { icon: Accessibility, text: "NDIS and Home Care provider ready" },
+    { icon: Accessibility, text: "NDIS and Aged Care provider ready" },
     { icon: Award, text: "Fully insured, agency approved teams" },
-    { icon: MapPin, text: "Serving 48 Melbourne suburbs" }
+    { icon: MapPin, text: "Serving most of Southeast suburbs in Melbourne and part of North and west suburbs" }
   ];
   return (
     <section className="relative overflow-hidden bg-slate-900 text-white">
@@ -634,7 +1344,7 @@ function HeroSection({ dispatch }: { dispatch: Dispatch }) {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Domestic, commercial, end of lease, NDIS and home care cleaning across
+              Domestic, commercial, end of lease, NDIS and aged care cleaning across
               Melbourne. Transparent pricing, agency approved standards, and a team that
               shows up ready.
             </p>
@@ -818,6 +1528,90 @@ function PricingTable({ pricing }: { pricing: Pricing }) {
   );
 }
 
+function ContentBlockRenderer({ block, index }: { block: ContentBlock; index: number }) {
+  const delay = Math.min(index * 0.05, 0.3);
+
+  if (block.kind === "text") {
+    return (
+      <Reveal delay={delay} className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
+        {block.title && <h3 className="text-sm font-bold uppercase tracking-tight text-slate-900">{block.title}</h3>}
+        {block.body && (
+          <p className={`text-sm leading-relaxed text-slate-600 ${block.title ? "mt-3" : ""}`}>{block.body}</p>
+        )}
+        {block.items && (
+          <ul className={`space-y-2.5 ${block.title || block.body ? "mt-4" : ""}`}>
+            {block.items.map((item, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm text-slate-700">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Reveal>
+    );
+  }
+
+  if (block.kind === "extras") {
+    return (
+      <Reveal delay={delay} className="mt-8">
+        <h3 className="text-lg font-bold tracking-tight text-slate-900">{block.title}</h3>
+        {block.intro && block.intro.map((p, i) => (
+          <p key={i} className="mt-2 text-sm leading-relaxed text-slate-600">{p}</p>
+        ))}
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
+          {block.categories.map((cat, ci) => (
+            <div key={ci} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+              <h4 className="text-sm font-bold uppercase tracking-tight text-slate-900">{cat.title}</h4>
+              <ul className="mt-3 space-y-2">
+                {cat.items.map((it, ii) => (
+                  <li key={ii} className="flex items-center justify-between gap-3 text-sm">
+                    <span className="text-slate-700">{it[0]}</span>
+                    <span className="whitespace-nowrap font-bold text-emerald-600">{it[1]}</span>
+                  </li>
+                ))}
+              </ul>
+              {cat.note && <p className="mt-3 text-xs leading-relaxed text-slate-500">{cat.note}</p>}
+            </div>
+          ))}
+        </div>
+      </Reveal>
+    );
+  }
+
+  if (block.kind === "rates") {
+    return (
+      <Reveal delay={delay} className="mt-8">
+        <h3 className="text-lg font-bold tracking-tight text-slate-900">{block.title}</h3>
+        {block.intro && <p className="mt-2 text-sm leading-relaxed text-slate-600">{block.intro}</p>}
+        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
+          <table className="w-full border-collapse text-left text-sm">
+            <thead>
+              <tr className="bg-slate-900 text-white">
+                {block.headers.map((h, i) => (
+                  <th key={i} className="px-4 py-3 font-semibold">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row, ri) => (
+                <tr key={ri} className={ri % 2 ? "bg-slate-50" : "bg-white"}>
+                  {row.map((cell, ci) => (
+                    <td key={ci} className={`px-4 py-3 ${ci === 0 ? "font-medium text-slate-800" : "text-slate-600"}`}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {block.footnote && <p className="mt-3 text-xs text-slate-500">{block.footnote}</p>}
+      </Reveal>
+    );
+  }
+
+  return null;
+}
+
 function DynamicServiceView({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   const k = state.activeServiceCategory;
   const s = SERVICES[k];
@@ -885,6 +1679,30 @@ function DynamicServiceView({ state, dispatch }: { state: State; dispatch: Dispa
           )}
         </Reveal>
 
+        {/* Intro */}
+        {s.intro && (
+          <Reveal className="mt-6 max-w-3xl space-y-3">
+            {s.intro.map((p, i) => (
+              <p key={i} className="text-sm leading-relaxed text-slate-600 sm:text-base">{p}</p>
+            ))}
+          </Reveal>
+        )}
+
+        {/* Intro list: We welcome / We work with */}
+        {s.introList && (
+          <Reveal className="mt-5 max-w-2xl rounded-2xl border border-slate-200 bg-slate-50 p-6">
+            <h3 className="text-sm font-bold uppercase tracking-tight text-slate-900">{s.introList.title}</h3>
+            <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
+              {s.introList.items.map((item, i) => (
+                <li key={i} className="flex items-center gap-2.5 text-sm text-slate-700">
+                  <Check className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        )}
+
         {/* Scope groups */}
         <div className={`mt-10 grid gap-5 ${s.groups.length > 1 ? "md:grid-cols-2 lg:grid-cols-3" : ""}`}>
           {s.groups.map((g, gi) => (
@@ -940,22 +1758,10 @@ function DynamicServiceView({ state, dispatch }: { state: State; dispatch: Dispa
           </div>
         )}
 
-        {/* Extras */}
-        {s.extras && (
-          <div className="mt-8">
-            <Reveal>
-              <h3 className="mb-4 text-lg font-bold tracking-tight text-slate-900">Optional extras</h3>
-            </Reveal>
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              {s.extras.map((e, i) => (
-                <Reveal key={i} delay={(i % 4) * 0.1} className="gl-elevate rounded-xl border border-slate-200 bg-white p-4">
-                  <div className="text-sm font-semibold text-slate-700">{e[0]}</div>
-                  <div className="mt-1 text-base font-black tracking-tight text-emerald-600">{e[1]}</div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Rich content blocks: bond back support, please note, categorised extras, rate tables, why choose, etc. */}
+        {s.contentBlocks && s.contentBlocks.map((block, i) => (
+          <ContentBlockRenderer key={i} block={block} index={i} />
+        ))}
 
         {/* Quote on inspection */}
         {s.quote && (
@@ -1195,9 +2001,9 @@ function AboutPage({ dispatch }: { dispatch: Dispatch }) {
     { icon: Award, title: "15+ years experience", body: "A decade and a half cleaning Melbourne homes, offices and rentals." },
     { icon: Shield, title: "Fully insured", body: "Insured teams trained to consistent, repeatable standards." },
     { icon: KeyRound, title: "Agency approved", body: "Bond back cleans aligned to the requirements of 14 leading agencies." },
-    { icon: Accessibility, title: "NDIS and home care ready", body: "Plan aligned support and recognised provider relationships." },
+    { icon: Accessibility, title: "NDIS and aged care ready", body: "Plan aligned support and recognised provider relationships." },
     { icon: Tag, title: "Transparent pricing", body: "Clear cash rates published up front, GST applied only on invoice." },
-    { icon: MapPin, title: "Local coverage", body: "Servicing 48 suburbs across bayside, inner and eastern Melbourne." }
+    { icon: MapPin, title: "Local coverage", body: "Servicing suburbs across Melbourne's southeast, with coverage extending into the north and west." }
   ];
   return (
     <>
@@ -1248,8 +2054,8 @@ function AreasPage({ dispatch }: { dispatch: Dispatch }) {
         <Container>
           <Reveal className="mb-10 max-w-2xl">
             <Eyebrow>Service areas</Eyebrow>
-            <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-5xl">Cleaning across 48 Melbourne suburbs</h1>
-            <p className="mt-4 text-slate-600">Bayside, inner city and eastern Melbourne. If your suburb is on the list, we clean there.</p>
+            <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-5xl">Cleaning across Southeast Melbourne, and into the North and West</h1>
+            <p className="mt-4 text-slate-600">We cover most of Melbourne's southeast, with additional coverage across the north and west. If your suburb is on the list, we clean there.</p>
           </Reveal>
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
             {AREAS.map((a, i) => (
@@ -1355,7 +2161,7 @@ function Footer({ dispatch }: { dispatch: Dispatch }) {
             <span className="text-lg font-black tracking-tight text-white">Greenlight Cleaning</span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
-            Domestic, commercial, end of lease, NDIS and home care cleaning across Melbourne.
+            Domestic, commercial, end of lease, NDIS and aged care cleaning across Melbourne.
             15+ years of consistent, agency approved results.
           </p>
           <div className="mt-6 space-y-3 text-sm">
