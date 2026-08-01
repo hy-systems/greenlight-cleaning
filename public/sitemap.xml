@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url><loc>https://greenlight-cleaning.vercel.app/</loc><priority>1.0</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/regular-domestic</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/commercial</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/end-of-lease</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/move-in</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/builders</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/house-for-sale</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/ndis</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/aged-care</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/strata</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/airbnb-short-term-rental</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas/brighton-cleaning-services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas/hampton-cleaning-services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas/camberwell-cleaning-services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas/malvern-cleaning-services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas/toorak-cleaning-services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas/glen-iris-cleaning-services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas/hawthorn-cleaning-services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/service-areas/bentleigh-east-cleaning-services</loc><priority>0.9</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/gallery</loc><priority>0.6</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/about</loc><priority>0.6</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/contact</loc><priority>0.7</priority></url>
+</urlset>
