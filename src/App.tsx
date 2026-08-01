@@ -1,5 +1,8 @@
 import React, { useReducer, useState, useEffect, useRef, memo } from "react";
 import {
+  BrowserRouter, Routes, Route, Link, useNavigate, useLocation, useParams, Navigate
+} from "react-router-dom";
+import {
   Menu, X, Phone, Mail, MessageCircle, MapPin, Check, CheckCircle2, Star,
   Shield, ArrowRight, ChevronRight, Clock, Award, ArrowLeft,
   Home, Building2, KeyRound, Truck, Paintbrush2, Hammer, Tag,
@@ -43,19 +46,12 @@ interface Service {
   quote?: boolean;
 }
 
-type Route = "home" | "services" | "service-detail" | "gallery" | "areas" | "about" | "contact";
-
 interface State {
-  currentRoute: Route;
   isMenuOpen: boolean;
   isChatOpen: boolean;
-  activeServiceCategory: string;
 }
 
 type Action =
-  | { type: "NAVIGATE"; route: Route }
-  | { type: "OPEN_SERVICE"; key: string }
-  | { type: "SET_SERVICE"; key: string }
   | { type: "TOGGLE_MENU" }
   | { type: "CLOSE_MENU" }
   | { type: "TOGGLE_CHAT" }
@@ -63,7 +59,7 @@ type Action =
 
 type Dispatch = React.Dispatch<Action>;
 
-interface NavLink { label: string; route: Route; }
+interface NavLink { label: string; path: string; }
 interface IconItem { icon: React.ElementType; text: string; }
 
 /* ============================================================
@@ -1119,23 +1115,16 @@ const CUSTOMER_PROMISES = [
 ];
 
 /* ============================================================
-   STATE MACHINE (useReducer)
+   STATE MACHINE (useReducer) — now UI-only, routing lives in
+   react-router instead of app state
    ============================================================ */
 const initialState: State = {
-  currentRoute: "home",
   isMenuOpen: false,
-  isChatOpen: false,
-  activeServiceCategory: "regular-domestic"
+  isChatOpen: false
 };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case "NAVIGATE":
-      return { ...state, currentRoute: action.route, isMenuOpen: false };
-    case "OPEN_SERVICE":
-      return { ...state, currentRoute: "service-detail", activeServiceCategory: action.key, isMenuOpen: false };
-    case "SET_SERVICE":
-      return { ...state, activeServiceCategory: action.key };
     case "TOGGLE_MENU":
       return { ...state, isMenuOpen: !state.isMenuOpen };
     case "CLOSE_MENU":
@@ -1160,7 +1149,6 @@ const GlobalStyles = memo(function GlobalStyles() {
         html { scroll-behavior: smooth; }
         .font-sans { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-        /* Smooth animation curves with extended durations */
         @keyframes gl-fade-up { 
           from { opacity: 0; transform: translateY(30px); } 
           to { opacity: 1; transform: translateY(0); } 
@@ -1210,7 +1198,6 @@ const GlobalStyles = memo(function GlobalStyles() {
 
 /* ============================================================
    MOTION PRIMITIVE
-   Bypasses React state to directly manipulate DOM for performance
    ============================================================ */
 function Reveal({ children, delay = 0, className = "", as: Tag = "div" }: {
   children: React.ReactNode;
@@ -1289,38 +1276,41 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 /* ============================================================
    NAVIGATION
+   Uses <Link> for real hrefs + useLocation for active state
    ============================================================ */
 function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
+  const location = useLocation();
   const links: NavLink[] = [
-    { label: "Home", route: "home" },
-    { label: "Services", route: "services" },
-    { label: "Gallery", route: "gallery" },
-    { label: "Service Areas", route: "areas" },
-    { label: "About", route: "about" },
-    { label: "Contact", route: "contact" }
+    { label: "Home", path: "/" },
+    { label: "Services", path: "/services" },
+    { label: "Gallery", path: "/gallery" },
+    { label: "Service Areas", path: "/service-areas" },
+    { label: "About", path: "/about" },
+    { label: "Contact", path: "/contact" }
   ];
-  const go = (route: Route) => dispatch({ type: "NAVIGATE", route });
+  const isActive = (path: string) => {
+    if (path === "/") return location.pathname === "/";
+    if (path === "/services") return location.pathname.startsWith("/services");
+    return location.pathname === path;
+  };
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white shadow-sm">
       <Container className="flex h-16 items-center justify-between lg:h-20">
-        <button onClick={() => go("home")} className="gl-fade-in flex items-center gap-3 gl-tap">
+        <Link to="/" className="gl-fade-in flex items-center gap-3 gl-tap" onClick={() => dispatch({ type: "CLOSE_MENU" })}>
           <img src="/logo.png" alt="Greenlight Cleaning Pty Ltd" className="h-10 w-auto" />
           <span className="text-xl font-extrabold tracking-tighter text-slate-900">Greenlight Cleaning</span>
-        </button>
+        </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {links.map((l) => {
-            const active = state.currentRoute === l.route || (l.route === "services" && state.currentRoute === "service-detail");
-            return (
-              <button
-                key={l.route}
-                onClick={() => go(l.route)}
-                className={`inline-flex items-center gl-tap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${active ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"}`}
-              >
-                {l.label}
-              </button>
-            );
-          })}
+          {links.map((l) => (
+            <Link
+              key={l.path}
+              to={l.path}
+              className={`inline-flex items-center gl-tap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${isActive(l.path) ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"}`}
+            >
+              {l.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="hidden lg:block">
@@ -1342,14 +1332,15 @@ function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
         <div className="border-t border-slate-200 bg-white lg:hidden">
           <Container className="flex flex-col gap-1 py-4">
             {links.map((l) => (
-              <button
-                key={l.route}
-                onClick={() => go(l.route)}
+              <Link
+                key={l.path}
+                to={l.path}
+                onClick={() => dispatch({ type: "CLOSE_MENU" })}
                 className="flex items-center justify-between gl-tap rounded-lg px-3 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
               >
                 {l.label}
                 <ChevronRight className="h-4 w-4 text-slate-400" />
-              </button>
+              </Link>
             ))}
             <EmeraldButton href={TEL} className="mt-2 w-full">
               <Phone className="h-4 w-4" /> Call {PHONE_DISPLAY}
@@ -1389,7 +1380,8 @@ function QuickContactCluster() {
   );
 }
 
-function HeroSection({ dispatch }: { dispatch: Dispatch }) {
+function HeroSection() {
+  const navigate = useNavigate();
   const highlights: IconItem[] = [
     { icon: Shield, text: "Bond back focused end of lease cleans" },
     { icon: Accessibility, text: "NDIS and Aged Care provider ready" },
@@ -1447,7 +1439,7 @@ function HeroSection({ dispatch }: { dispatch: Dispatch }) {
                 ))}
               </div>
               <button
-                onClick={() => dispatch({ type: "NAVIGATE", route: "services" })}
+                onClick={() => navigate("/services")}
                 className="gl-cta gl-tap mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900"
               >
                 View all services <ArrowRight className="h-4 w-4" />
@@ -1535,13 +1527,13 @@ function TriChannelContact({ compact = false }: { compact?: boolean }) {
 /* ============================================================
    SERVICE GRID
    ============================================================ */
-function ServiceCard({ k, dispatch, delay }: { k: string; dispatch: Dispatch; delay: number }) {
+function ServiceCard({ k, delay }: { k: string; delay: number }) {
   const s = SERVICES[k];
   const Icon = ICONS[s.icon];
   return (
     <Reveal delay={delay}>
-      <button
-        onClick={() => dispatch({ type: "OPEN_SERVICE", key: k })}
+      <Link
+        to={`/services/${k}`}
         className="gl-elevate flex h-full w-full flex-col rounded-2xl border border-slate-200 bg-white p-6 text-left"
       >
         <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900 text-white">
@@ -1552,16 +1544,16 @@ function ServiceCard({ k, dispatch, delay }: { k: string; dispatch: Dispatch; de
         <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600">
           View details <ChevronRight className="h-4 w-4" />
         </span>
-      </button>
+      </Link>
     </Reveal>
   );
 }
 
-function ServiceGrid({ dispatch }: { dispatch: Dispatch }) {
+function ServiceGrid() {
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
       {SERVICE_KEYS.map((k, i) => (
-        <ServiceCard key={k} k={k} dispatch={dispatch} delay={(i % 3) * 0.1} />
+        <ServiceCard key={k} k={k} delay={(i % 3) * 0.1} />
       ))}
     </div>
   );
@@ -1683,8 +1675,16 @@ function ContentBlockRenderer({ block, index }: { block: ContentBlock; index: nu
   return null;
 }
 
-function DynamicServiceView({ state, dispatch }: { state: State; dispatch: Dispatch }) {
-  const k = state.activeServiceCategory;
+function DynamicServiceView() {
+  const { serviceKey } = useParams<{ serviceKey: string }>();
+  const navigate = useNavigate();
+  const k = serviceKey && SERVICES[serviceKey] ? serviceKey : SERVICE_KEYS[0];
+
+  // Unknown service slug in the URL — bounce to the services index instead of crashing
+  if (serviceKey && !SERVICES[serviceKey]) {
+    return <Navigate to="/services" replace />;
+  }
+
   const s = SERVICES[k];
   const Icon = ICONS[s.icon];
   const tabStripRef = useRef<HTMLDivElement>(null);
@@ -1702,12 +1702,12 @@ function DynamicServiceView({ state, dispatch }: { state: State; dispatch: Dispa
   return (
     <section className="bg-white py-12 sm:py-16">
       <Container>
-        <button
-          onClick={() => dispatch({ type: "NAVIGATE", route: "services" })}
+        <Link
+          to="/services"
           className="mb-8 inline-flex items-center gap-1.5 gl-tap text-sm font-semibold text-slate-500 hover:text-slate-900"
         >
           <ArrowLeft className="h-4 w-4" /> All services
-        </button>
+        </Link>
 
         {/* Tab strip with mobile scroll affordance */}
         <div className="relative mb-10">
@@ -1719,7 +1719,7 @@ function DynamicServiceView({ state, dispatch }: { state: State; dispatch: Dispa
                   <button
                     key={key}
                     ref={active ? activeTabRef : null}
-                    onClick={() => dispatch({ type: "SET_SERVICE", key })}
+                    onClick={() => navigate(`/services/${key}`)}
                     className={`inline-flex items-center gl-tap whitespace-nowrap rounded-full px-4 text-sm font-semibold transition-colors ${active ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
                   >
                     {SERVICES[key].name}
@@ -1946,13 +1946,13 @@ function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
 /* ============================================================
    PAGE: HOME
    ============================================================ */
-function HomePage({ dispatch }: { dispatch: Dispatch }) {
+function HomePage() {
+  const navigate = useNavigate();
   return (
     <>
-      <HeroSection dispatch={dispatch} />
+      <HeroSection />
       <StatsBand />
       
-      {/* --- NEW CLIENT COPY SECTION --- */}
       <section className="bg-white py-16 sm:py-20">
         <Container>
           <Reveal className="max-w-3xl">
@@ -2032,16 +2032,16 @@ function HomePage({ dispatch }: { dispatch: Dispatch }) {
               <Eyebrow>What we clean</Eyebrow>
               <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Ten cleaning services, one trusted team</h2>
             </div>
-            <button onClick={() => dispatch({ type: "NAVIGATE", route: "services" })} className="inline-flex items-center gap-1.5 gl-tap text-sm font-semibold text-emerald-600">
+            <button onClick={() => navigate("/services")} className="inline-flex items-center gap-1.5 gl-tap text-sm font-semibold text-emerald-600">
               See all services <ArrowRight className="h-4 w-4" />
             </button>
           </Reveal>
-          <ServiceGrid dispatch={dispatch} />
+          <ServiceGrid />
         </Container>
       </section>
       <BeforeAfterGallery />
       <TriChannelContact />
-      <CtaBand dispatch={dispatch} />
+      <CtaBand />
     </>
   );
 }
@@ -2049,7 +2049,7 @@ function HomePage({ dispatch }: { dispatch: Dispatch }) {
 /* ============================================================
    PAGE: SERVICES
    ============================================================ */
-function ServicesPage({ dispatch }: { dispatch: Dispatch }) {
+function ServicesPage() {
   return (
     <section className="bg-white py-12 sm:py-16">
       <Container>
@@ -2058,7 +2058,7 @@ function ServicesPage({ dispatch }: { dispatch: Dispatch }) {
           <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-5xl">Cleaning for every space and standard</h1>
           <p className="mt-4 text-slate-600">From weekly domestic cleans to bond back end of lease work, NDIS support and strata maintenance. Select a service for full scope and pricing.</p>
         </Reveal>
-        <ServiceGrid dispatch={dispatch} />
+        <ServiceGrid />
       </Container>
     </section>
   );
@@ -2067,7 +2067,7 @@ function ServicesPage({ dispatch }: { dispatch: Dispatch }) {
 /* ============================================================
    PAGE: ABOUT
    ============================================================ */
-function AboutPage({ dispatch }: { dispatch: Dispatch }) {
+function AboutPage() {
   const points: { icon: React.ElementType; title: string; body: string }[] = [
     { icon: Award, title: "15+ years experience", body: "A decade and a half cleaning Melbourne homes, offices and rentals." },
     { icon: Shield, title: "Fully insured", body: "Insured teams trained to consistent, repeatable standards." },
@@ -2110,7 +2110,7 @@ function AboutPage({ dispatch }: { dispatch: Dispatch }) {
           </div>
         </Container>
       </section>
-      <CtaBand dispatch={dispatch} />
+      <CtaBand />
     </>
   );
 }
@@ -2118,7 +2118,7 @@ function AboutPage({ dispatch }: { dispatch: Dispatch }) {
 /* ============================================================
    PAGE: AREAS
    ============================================================ */
-function AreasPage({ dispatch }: { dispatch: Dispatch }) {
+function AreasPage() {
   return (
     <>
       <section className="bg-white py-12 sm:py-16">
@@ -2140,7 +2140,7 @@ function AreasPage({ dispatch }: { dispatch: Dispatch }) {
           </div>
         </Container>
       </section>
-      <CtaBand dispatch={dispatch} />
+      <CtaBand />
     </>
   );
 }
@@ -2194,7 +2194,7 @@ function ContactPage() {
 /* ============================================================
    CTA BAND
    ============================================================ */
-function CtaBand({ dispatch }: { dispatch: Dispatch }) {
+function CtaBand() {
   return (
     <section className="bg-slate-900 py-16 text-white sm:py-20">
       <Container className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
@@ -2214,14 +2214,14 @@ function CtaBand({ dispatch }: { dispatch: Dispatch }) {
 /* ============================================================
    FOOTER
    ============================================================ */
-function Footer({ dispatch }: { dispatch: Dispatch }) {
+function Footer() {
   const quick: NavLink[] = [
-    { label: "Home", route: "home" },
-    { label: "Services", route: "services" },
-    { label: "Gallery", route: "gallery" },
-    { label: "Service Areas", route: "areas" },
-    { label: "About", route: "about" },
-    { label: "Contact", route: "contact" }
+    { label: "Home", path: "/" },
+    { label: "Services", path: "/services" },
+    { label: "Gallery", path: "/gallery" },
+    { label: "Service Areas", path: "/service-areas" },
+    { label: "About", path: "/about" },
+    { label: "Contact", path: "/contact" }
   ];
   return (
     <footer className="bg-slate-900 text-slate-300">
@@ -2246,8 +2246,8 @@ function Footer({ dispatch }: { dispatch: Dispatch }) {
           <h4 className="text-sm font-bold uppercase tracking-tight text-white">Company</h4>
           <ul className="mt-4 space-y-2.5 text-sm">
             {quick.map((q) => (
-              <li key={q.route}>
-                <button onClick={() => dispatch({ type: "NAVIGATE", route: q.route })} className="inline-flex items-center gl-tap text-slate-400 hover:text-white">{q.label}</button>
+              <li key={q.path}>
+                <Link to={q.path} className="inline-flex items-center gl-tap text-slate-400 hover:text-white">{q.label}</Link>
               </li>
             ))}
           </ul>
@@ -2258,7 +2258,7 @@ function Footer({ dispatch }: { dispatch: Dispatch }) {
           <ul className="mt-4 space-y-2.5 text-sm">
             {SERVICE_KEYS.map((k) => (
               <li key={k}>
-                <button onClick={() => dispatch({ type: "OPEN_SERVICE", key: k })} className="inline-flex items-center gl-tap text-left text-slate-400 hover:text-white">{SERVICES[k].name}</button>
+                <Link to={`/services/${k}`} className="inline-flex items-center gl-tap text-left text-slate-400 hover:text-white">{SERVICES[k].name}</Link>
               </li>
             ))}
           </ul>
@@ -2352,36 +2352,54 @@ function SeoSchema() {
 }
 
 /* ============================================================
+   SCROLL TO TOP ON ROUTE CHANGE
+   ============================================================ */
+function ScrollToTop() {
+  const location = useLocation();
+  useEffect(() => {
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location.pathname]);
+  return null;
+}
+
+/* ============================================================
+   APP SHELL — layout that wraps every route
+   ============================================================ */
+function AppShell({ state, dispatch }: { state: State; dispatch: Dispatch }) {
+  return (
+    <div className="min-h-screen bg-white font-sans text-slate-900 antialiased">
+      <GlobalStyles />
+      <SeoSchema />
+      <ScrollToTop />
+      <Navigation state={state} dispatch={dispatch} />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/services/:serviceKey" element={<DynamicServiceView />} />
+          <Route path="/gallery" element={<BeforeAfterGallery />} />
+          <Route path="/service-areas" element={<AreasPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          {/* Unknown paths fall back to home rather than a dead page */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      <Footer />
+      <FloatingActionMenu state={state} dispatch={dispatch} />
+    </div>
+  );
+}
+
+/* ============================================================
    ROOT APP
    ============================================================ */
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [state.currentRoute, state.activeServiceCategory]);
-
-  const renderRoute = () => {
-    switch (state.currentRoute) {
-      case "home": return <HomePage dispatch={dispatch} />;
-      case "services": return <ServicesPage dispatch={dispatch} />;
-      case "service-detail": return <DynamicServiceView state={state} dispatch={dispatch} />;
-      case "gallery": return <BeforeAfterGallery />;
-      case "areas": return <AreasPage dispatch={dispatch} />;
-      case "about": return <AboutPage dispatch={dispatch} />;
-      case "contact": return <ContactPage />;
-      default: return <HomePage dispatch={dispatch} />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 antialiased">
-      <GlobalStyles />
-      <SeoSchema />
-      <Navigation state={state} dispatch={dispatch} />
-      <main>{renderRoute()}</main>
-      <Footer dispatch={dispatch} />
-      <FloatingActionMenu state={state} dispatch={dispatch} />
-    </div>
+    <BrowserRouter>
+      <AppShell state={state} dispatch={dispatch} />
+    </BrowserRouter>
   );
 }
