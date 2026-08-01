@@ -6,7 +6,7 @@ import {
   Menu, X, Phone, Mail, MessageCircle, MapPin, Check, CheckCircle2, Star,
   Shield, ArrowRight, ChevronRight, Clock, Award, ArrowLeft,
   Home, Building2, KeyRound, Truck, Paintbrush2, Hammer, Tag,
-  HeartHandshake, Accessibility, Layers, Smartphone
+  HeartHandshake, Accessibility, Layers, Smartphone, BedDouble
 } from "lucide-react";
 
 /* ============================================================
@@ -79,7 +79,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 const ICONS: Record<string, React.ElementType> = {
   home: Home, building: Building2, key: KeyRound, truck: Truck,
   paint: Paintbrush2, hammer: Hammer, tag: Tag, access: Accessibility,
-  heart: HeartHandshake, layers: Layers
+  heart: HeartHandshake, layers: Layers, bed: BedDouble
 };
 
 const NDIS_PROVIDERS: string[] = [
@@ -1072,10 +1072,370 @@ const SERVICES: Record<string, Service> = {
       }
     ],
     quote: true
+  },
+
+  "airbnb-short-term-rental": {
+    icon: "bed",
+    name: "Airbnb & Short-Term Rental Cleaning",
+    summary: "Fast, reliable turnover cleaning between guest stays, built for hosts who can't afford a bad review over a missed corner.",
+    intro: [
+      "Guest changeovers run on a tight clock. We turn properties around between checkout and check-in with a consistent, repeatable clean covering bedrooms, bathrooms, kitchen and living areas, so every guest walks into a space that looks freshly presented.",
+      "We work with hosts and property managers across Airbnb, Booking.com, Stayz, Vrbo, corporate accommodation providers, granny flats and self-contained units. Every clean follows the same checklist regardless of which platform the booking came through."
+    ],
+    groups: [
+      {
+        title: "Standard Changeover Clean",
+        items: [
+          "Bedrooms dusted, surfaces wiped, floors vacuumed or mopped",
+          "Bathrooms sanitised, including shower, toilet, vanity and mirrors",
+          "Kitchen benches, sink, stovetop and exterior of appliances wiped down",
+          "Living areas tidied, dusted and floors cleaned",
+          "Beds stripped and remade with fresh linen",
+          "Rubbish and recycling removed from the property",
+          "Guest supplies restocked where arranged with the host (toiletries, tea/coffee, toilet paper)"
+        ]
+      },
+      {
+        title: "Property Types & Platforms We Service",
+        items: [
+          "Airbnb and Booking.com listings",
+          "Stayz and Vrbo listings",
+          "Corporate accommodation and serviced apartments",
+          "Granny flats and self-contained units"
+        ]
+      },
+      {
+        title: "Property Condition Checks",
+        items: [
+          "Basic visual walkthrough during every clean",
+          "Photo report sent to the host for any visible damage or maintenance issue spotted",
+          "This is a visual check as part of the clean, not a formal property inspection"
+        ]
+      }
+    ],
+    contentBlocks: [
+      {
+        kind: "rates",
+        title: "Changeover Cleaning Rates",
+        intro: "Priced by property size and the number of bedrooms actually used by guests, not the total bedrooms in the property.",
+        headers: ["Property", "1 Bed", "2 Beds", "3 Beds", "4 Beds", "5 Beds"],
+        rows: [
+          ["3 Bed / 1 Bath", "$180", "$230", "$280", "—", "—"],
+          ["3 Bed / 2 Bath", "$200", "$250", "$300", "—", "—"],
+          ["4 Bed / 2 Bath", "$220", "$270", "$320", "$370", "—"],
+          ["4 Bed / 3 Bath", "$240", "$290", "$340", "$390", "—"],
+          ["5 Bed / 2 Bath", "$250", "$300", "$350", "$400", "$450"],
+          ["5 Bed / 3 Bath", "$270", "$320", "$370", "$420", "$470"]
+        ],
+        footnote: "Base price includes linen service for the first occupied bedroom. Add $50 per additional occupied bedroom needing linen changed."
+      },
+      {
+        kind: "text",
+        title: "Optional Extras",
+        items: [
+          "Extra towels/linen — from $20",
+          "Oven cleaning — from $40",
+          "BBQ cleaning — from $40",
+          "Balcony/outdoor area — from $30",
+          "Excess rubbish removal — from $20",
+          "Pet hair removal — from $30",
+          "Same-day emergency turnover — priced on application"
+        ]
+      }
+    ],
+    note: "Pricing is based on the number of bedrooms actually occupied by guests, not the total bedrooms in the property. Base price includes linen service for the first occupied bedroom, plus $50 per additional occupied bedroom needing linen changed. Linen washing, drying and collection is available as an optional add-on, arranged and priced separately from the standard clean.",
+    quote: false
   }
 };
 
 const SERVICE_KEYS: string[] = Object.keys(SERVICES);
+
+/* ============================================================
+   SUBURB LANDING PAGE DATA
+   ============================================================ */
+interface SuburbFAQ {
+  question: string;
+  answer: string;
+}
+
+interface SuburbPage {
+  slug: string;
+  name: string;
+  metaTitle: string;
+  metaDescription: string;
+  h1: string;
+  intro: string[];
+  servicesOffered: string[];
+  whyLocalsChooseUs: string[];
+  propertyTypes: string[];
+  streetsAndLandmarks: string[];
+  localCleaningNeeds: string;
+  faq: SuburbFAQ[];
+  nearbySuburbs: string[];
+}
+
+const SUBURBS: Record<string, SuburbPage> = {
+  brighton: {
+    slug: "brighton",
+    name: "Brighton",
+    metaTitle: "Cleaning Services Brighton | Greenlight Cleaning",
+    metaDescription: "Domestic, end of lease and Airbnb cleaning across Brighton. Local team experienced with bayside homes, apartments and premium finishes.",
+    h1: "Professional Cleaning Services in Brighton",
+    intro: [
+      "Brighton's mix of grand bayside homes, apartments and short-stay properties means no two cleans look quite the same. A weatherboard on Were Street needs a different touch to a glass-fronted apartment near Middle Brighton Station, and we plan every job around the property in front of us rather than a one-size checklist.",
+      "We service homeowners along Church Street and Bay Street, families near Elsternwick Park, and hosts running short-stay properties close to Dendy Beach and Brighton Baths. Whether it's a weekly domestic clean, a pre-sale presentation, an end of lease clean, or a same-day guest turnover, our team turns up on time and works to the standard the property deserves."
+    ],
+    servicesOffered: ["regular-domestic", "house-for-sale", "end-of-lease", "airbnb-short-term-rental"],
+    whyLocalsChooseUs: [
+      "Local team familiar with the streets between North Brighton and South Road",
+      "Experience cleaning premium finishes without damaging stone, timber or glass",
+      "Flexible scheduling around beach season and holiday-let turnovers",
+      "Same checklist standard whether it's a weekly clean or a one-off deep clean",
+      "Comfortable working in occupied family homes and vacant properties alike"
+    ],
+    propertyTypes: ["Beachside family homes", "Premium residences", "Apartments", "Townhouses", "Short-stay and Airbnb properties"],
+    streetsAndLandmarks: ["Church Street", "Bay Street", "Beach Road", "New Street", "St Kilda Street", "North Road", "South Road", "Dendy Street", "Were Street", "Martin Street", "Brighton Beach", "Dendy Beach", "Brighton Baths", "Middle Brighton Station", "North Brighton Station", "Elsternwick Park", "Brighton Grammar", "Firbank Grammar"],
+    localCleaningNeeds: "Bayside living brings its own maintenance headaches. Salt air off Port Phillip Bay leaves a residue on glass, balcony railings and metal fittings that builds up faster than most homeowners expect, and beach visits track sand into entryways and living areas most weekends. The humidity that comes with coastal exposure also raises mould risk in bathrooms and window tracks if it's not kept on top of. Brighton's premium stone benchtops and timber floors need non-abrasive products applied properly, not a generic all-purpose spray, so we adjust our approach property by property rather than treating every surface the same.",
+    faq: [
+      { question: "Do you clean short-stay and Airbnb properties in Brighton?", answer: "Yes. We run guest changeover cleans between bookings for hosts near the beach and the Church Street and Bay Street precincts, with same-day turnaround where needed. See our Airbnb & short-term rental cleaning page for full pricing." },
+      { question: "Can you manage salt residue and sand tracked in from the beach?", answer: "Yes, this is one of the most common requests we get in Brighton. We focus extra attention on glass, balcony fittings and entryways where salt film and sand tend to build up fastest." },
+      { question: "Do you bring your own cleaning products and equipment?", answer: "Yes, our team arrives fully equipped. If a property has specific product requirements for premium stone or timber surfaces, let us know in advance and we'll accommodate it." },
+      { question: "Can you clean an occupied family home rather than a vacant property?", answer: "Yes, most of our Brighton work is regular domestic cleaning in occupied homes. We work around your schedule and can set up a recurring weekly or fortnightly visit." },
+      { question: "Do you offer end of lease cleaning for Brighton rentals and apartments?", answer: "Yes, our end of lease service is bond-back focused and covers apartments and houses across Brighton, including properties near Middle Brighton and North Brighton stations." },
+      { question: "How far in advance should I book for a beach-season weekend turnover?", answer: "Beach season books out fastest, so for Friday or Saturday turnovers we'd recommend locking in your booking at least a few days ahead where possible." }
+    ],
+    nearbySuburbs: ["Hampton", "Brighton East", "Elwood", "Sandringham", "Bentleigh", "Bentleigh East"]
+  },
+
+  hampton: {
+    slug: "hampton",
+    name: "Hampton",
+    metaTitle: "Cleaning Services Hampton | Greenlight Cleaning",
+    metaDescription: "House cleaning, end of lease and regular domestic services for Hampton families, near Hampton Street village and Hampton Beach.",
+    h1: "Professional Cleaning Services in Hampton",
+    intro: [
+      "Hampton runs at a family pace. Between school pickups, the Hampton Street shopping strip and weekend trips down to the beach, cleaning is usually the thing that gets pushed to the bottom of the list, which is exactly the gap we fill for busy households around Ludstone Street, Thomas Street and the wider Hampton Street village.",
+      "Our team covers Californian bungalows, modern townhouses and beachside apartments across the suburb, from streets near Boss James Reserve through to homes closer to Bluff Road. Regular domestic cleaning is our most requested service here, alongside end of lease cleans for renters moving in or out of the area."
+    ],
+    servicesOffered: ["regular-domestic", "end-of-lease", "house-for-sale"],
+    whyLocalsChooseUs: [
+      "Built around the routines of busy families near the Hampton Street village",
+      "Reliable recurring bookings that fit school-run and work schedules",
+      "Experience with both older Californian bungalows and newer townhouse builds",
+      "Straightforward pricing with no surprise add-ons for a standard clean",
+      "Comfortable working around kids, pets and everyday household activity"
+    ],
+    propertyTypes: ["Californian bungalows", "Modern townhouses", "Beachside apartments", "Family homes"],
+    streetsAndLandmarks: ["Hampton Street", "Beach Road", "Bluff Road", "South Road", "Ludstone Street", "Thomas Street", "Orlando Street", "Linacre Road", "Willis Street", "Hampton Beach", "Hampton Railway Station", "Hampton Primary School", "Boss James Reserve", "Castlefield Reserve"],
+    localCleaningNeeds: "Living close to Hampton Beach means the same coastal challenges as anywhere along this stretch of bay, salt film on windows and railings, sand carried in after a walk along the foreshore, and bathrooms that need regular attention to keep humidity-driven mould from taking hold. What sets Hampton apart from its neighbours is the volume of family life packed into a small area, school bags dropped by the door, sports gear tracked through hallways, and a shopping village that keeps the whole suburb busy on weekends. Our cleans are built around that rhythm rather than an empty showroom.",
+    faq: [
+      { question: "Do you offer regular weekly or fortnightly cleaning in Hampton?", answer: "Yes, recurring domestic cleaning is our most common booking type in Hampton, and we can set a schedule that fits around school runs and work hours." },
+      { question: "Can you work around kids and pets being home during the clean?", answer: "Yes, most of our Hampton clients are in occupied family homes and our team is used to working around everyday household activity without disrupting your day." },
+      { question: "Do you clean properties near the Hampton Street shops?", answer: "Yes, we regularly service homes and apartments in and around the Hampton Street village, including streets like Ludstone and Thomas." },
+      { question: "Is end of lease cleaning available for Hampton rentals?", answer: "Yes, our end of lease service is aimed at getting your bond back and covers houses, townhouses and apartments across Hampton." },
+      { question: "Do you handle sand and salt buildup from beach visits?", answer: "Yes, given how close most of Hampton sits to the beach, we pay particular attention to entryways, floors and window sills where sand and salt residue collect." },
+      { question: "How do I book a one-off clean before an inspection or open house?", answer: "Get in touch through our contact form or WhatsApp and let us know the property size and the date you need it done by, and we'll confirm availability." }
+    ],
+    nearbySuburbs: ["Brighton", "Sandringham", "Black Rock", "Highett"]
+  },
+
+  camberwell: {
+    slug: "camberwell",
+    name: "Camberwell",
+    metaTitle: "Cleaning Services Camberwell | Greenlight Cleaning",
+    metaDescription: "Heritage-aware house cleaning and end of lease services in Camberwell, covering period homes near Camberwell Junction and Burke Road.",
+    h1: "Professional Cleaning Services in Camberwell",
+    intro: [
+      "Period homes with decorative ceilings, original timber floors and ornate cornices are the norm rather than the exception around Camberwell Junction, and cleaning them well means knowing which products to avoid as much as which ones to use. That's the reputation we've built with homeowners along Prospect Hill Road, Trafalgar Road and the streets fanning out from the Junction.",
+      "From Burke Road through to Wattle Valley Road, we clean everything from grand heritage residences to more modest Californian bungalows, working with families who've been in the area for decades and newer arrivals drawn to the tree-lined streets, the shopping precinct and the Rivoli Cinemas end of town."
+    ],
+    servicesOffered: ["regular-domestic", "house-for-sale", "end-of-lease"],
+    whyLocalsChooseUs: [
+      "Experienced with heritage features like ornate cornices and original timber flooring",
+      "Careful, non-abrasive approach on decorative ceilings and period detailing",
+      "Familiar with the seasonal leaf and pollen buildup around Camberwell's tree-lined streets",
+      "Trusted by families near Camberwell High School and Canterbury Girls' for reliable scheduling",
+      "Presentation-focused cleans for homes going on the market near the Junction"
+    ],
+    propertyTypes: ["Period homes", "Heritage residences", "Californian bungalows", "Large family homes"],
+    streetsAndLandmarks: ["Burke Road", "Camberwell Road", "Riversdale Road", "Prospect Hill Road", "Trafalgar Road", "Highfield Road", "Wattle Valley Road", "Camberwell Junction", "Camberwell Railway Station", "Rivoli Cinemas", "Canterbury Girls' Secondary College", "Camberwell High School", "Siena College"],
+    localCleaningNeeds: "The mature trees that give Camberwell's streets their character also mean a genuine seasonal workload, particularly through autumn when leaf litter and pollen collect around entrances, verandahs and window tracks faster than most residents can keep up with on their own. Inside, the same period features that make these homes desirable, decorative ceilings, original cornices, polished timber floors, need a gentler hand than a standard clean. We use non-abrasive methods on these surfaces so the heritage detailing stays intact rather than dulled or scratched over time.",
+    faq: [
+      { question: "Do you know how to clean older heritage homes without damaging original features?", answer: "Yes, we regularly work in period homes around Camberwell Junction and use non-abrasive methods on decorative ceilings, cornices and original timber flooring." },
+      { question: "Can you help with autumn leaf and pollen buildup around entrances?", answer: "Yes, this is a genuine seasonal issue on Camberwell's tree-lined streets, and we factor extra time into entryway and verandah cleaning during autumn and spring where needed." },
+      { question: "Do you offer presentation cleaning for homes going up for sale near the Junction?", answer: "Yes, our house-for-sale service is built to get a property looking its best for open inspections, including homes with heritage features that need careful handling." },
+      { question: "Is regular domestic cleaning available for busy Camberwell families?", answer: "Yes, we offer weekly and fortnightly domestic cleaning for households near Camberwell High School, Canterbury Girls' and the surrounding streets." },
+      { question: "Do you provide end of lease cleaning for period apartments and houses?", answer: "Yes, our end of lease clean is bond-back focused and suited to both period conversions and standard rental properties across Camberwell." }
+    ],
+    nearbySuburbs: ["Canterbury", "Hawthorn East", "Surrey Hills", "Glen Iris", "Balwyn"]
+  },
+
+  malvern: {
+    slug: "malvern",
+    name: "Malvern",
+    metaTitle: "Cleaning Services Malvern | Greenlight Cleaning",
+    metaDescription: "Trusted house cleaning near Malvern's Glenferrie Road village, servicing period homes, luxury townhouses and apartments.",
+    h1: "Professional Cleaning Services in Malvern",
+    intro: [
+      "Malvern sits in that stretch of Melbourne where a stroll down Glenferrie Road or High Street can turn into a full afternoon, and residents here expect their home to keep pace with the polish of the shopping village around it. We clean period homes, luxury townhouses and apartments across the suburb with that standard in mind.",
+      "Sitting between the Toorak and Armadale prestige corridor and the Malvern Central precinct, this suburb attracts homeowners who want reliability as much as quality, someone who turns up when they say they will and leaves the property exactly as expected. That's the standard we hold ourselves to on every job along Wattletree Road, Kooyong Road and the streets around Malvern Public Gardens."
+    ],
+    servicesOffered: ["regular-domestic", "house-for-sale", "end-of-lease"],
+    whyLocalsChooseUs: [
+      "Comfortable working in elegant, high-presentation homes near the Glenferrie Road village",
+      "Reliable scheduling for households that value consistency over convenience",
+      "Careful with premium finishes in period homes and newer luxury townhouses",
+      "Experience preparing properties near Malvern Central and Tooronga Station for sale",
+      "Discreet, professional service suited to busy professional households"
+    ],
+    propertyTypes: ["Period homes", "Luxury townhouses", "Apartments near the village"],
+    streetsAndLandmarks: ["Glenferrie Road", "High Street", "Malvern Road", "Wattletree Road", "Tooronga Road", "Kooyong Road", "Stanhope Street", "Claremont Avenue", "Malvern Public Gardens", "Malvern Central", "Malvern Railway Station", "Tooronga Railway Station", "Cabrini Hospital", "De La Salle College"],
+    localCleaningNeeds: "Proximity to the Toorak and Armadale corridor means many Malvern homes carry the same premium stone, timber and cabinetry finishes as their more famous neighbours, and those surfaces need products that clean without dulling or scratching them over time. The Glenferrie Road and High Street shopping villages also mean a steady flow of foot traffic through entryways and living spaces in busy households, so we pay close attention to high-traffic zones like hallways and kitchens where day-to-day wear shows up fastest.",
+    faq: [
+      { question: "Can you clean luxury townhouses and period homes near the Malvern village?", answer: "Yes, we regularly work in both period homes and newer luxury townhouses around Glenferrie Road and High Street, using products suited to premium finishes." },
+      { question: "Do you offer recurring cleaning for busy professional households?", answer: "Yes, weekly and fortnightly domestic cleaning is common in Malvern, and we build a schedule around your household's routine." },
+      { question: "Can you prepare a property for sale near Malvern Central or Tooronga Station?", answer: "Yes, our house-for-sale service focuses on presentation cleaning to get a property ready for open inspections and photography." },
+      { question: "Do you clean apartments as well as houses in Malvern?", answer: "Yes, we service apartments near the village as well as detached homes and townhouses throughout the suburb." },
+      { question: "Is end of lease cleaning available for Malvern rentals?", answer: "Yes, our end of lease service is bond-back focused and covers houses, townhouses and apartments across Malvern." }
+    ],
+    nearbySuburbs: ["Armadale", "Toorak", "Glen Iris", "Caulfield", "Prahran"]
+  },
+
+  toorak: {
+    slug: "toorak",
+    name: "Toorak",
+    metaTitle: "Cleaning Services Toorak | Greenlight Cleaning",
+    metaDescription: "Discreet, reliable house cleaning for Toorak homes, experienced with natural stone, marble, hardwood and custom cabinetry.",
+    h1: "Professional Cleaning Services in Toorak",
+    intro: [
+      "A home on Lansell Road or Towers Road isn't cleaned the same way as a standard suburban house, the scale alone changes the job, and the finishes throughout mean the wrong product on the wrong surface can cause real damage. We've built our approach around that reality rather than trying to fit Toorak homes into a generic checklist.",
+      "Our clients here are mostly busy professional households who value discretion and consistency, someone they don't have to manage or double-check. From architect-designed homes near Como Park to landscaped properties off Orrong Road and St Georges Road, we work quietly, thoroughly, and to the same standard every visit."
+    ],
+    servicesOffered: ["regular-domestic", "house-for-sale", "end-of-lease"],
+    whyLocalsChooseUs: [
+      "Experienced with natural stone, marble, hardwood and custom cabinetry",
+      "Discreet service suited to busy, privacy-conscious professional households",
+      "Consistent attention across large, multi-living-area homes",
+      "Reliable, punctual scheduling without needing to be managed",
+      "Careful, non-damaging products used throughout every clean"
+    ],
+    propertyTypes: ["Grand family homes", "Architect-designed residences", "Landscaped estate properties"],
+    streetsAndLandmarks: ["Toorak Road", "Malvern Road", "Williams Road", "Orrong Road", "St Georges Road", "Kooyong Road", "Grange Road", "Lansell Road", "Towers Road", "Toorak Village", "Como Park", "Heyington Railway Station", "St Catherine's School", "St Kevin's College", "Loreto Mandeville Hall"],
+    localCleaningNeeds: "Toorak properties tend to run larger than average, often with multiple living areas that all need the same level of attention rather than a quick pass through the main rooms. Natural stone benchtops, marble flooring, hardwood surfaces and custom cabinetry all require specific, non-abrasive products, using the wrong one can etch stone or strip a timber finish, so our team adjusts its approach room by room. For households near St Catherine's, St Kevin's or Loreto Mandeville Hall managing busy family schedules, having a cleaning team that's consistent and doesn't need constant instruction matters as much as the clean itself.",
+    faq: [
+      { question: "Do you have experience cleaning homes with natural stone and marble surfaces?", answer: "Yes, this is common across Toorak properties and we use non-abrasive, stone-safe products to avoid etching or dulling these finishes." },
+      { question: "Can you manage a large home with multiple living areas consistently?", answer: "Yes, our team allocates time based on the actual size and layout of the property so every living area gets the same standard of attention, not just the main rooms." },
+      { question: "Is your service discreet for busy professional households?", answer: "Yes, discretion and reliability are central to how we operate in Toorak, and we're comfortable working independently without requiring ongoing supervision." },
+      { question: "Do you offer presentation cleaning ahead of a sale or open for inspection?", answer: "Yes, our house-for-sale service is designed to get large, high-finish properties presentation-ready for private inspections or open homes." },
+      { question: "Can you work around a household's specific product preferences for premium finishes?", answer: "Yes, if a property has particular product requirements for stone, hardwood or custom cabinetry, let us know in advance and we'll work within that." }
+    ],
+    nearbySuburbs: ["South Yarra", "Armadale", "Malvern", "Kooyong", "Prahran"]
+  },
+
+  "glen-iris": {
+    slug: "glen-iris",
+    name: "Glen Iris",
+    metaTitle: "Cleaning Services Glen Iris | Greenlight Cleaning",
+    metaDescription: "House cleaning across Glen Iris, spanning Stonnington and Boroondara, from period homes to renovated family townhouses.",
+    h1: "Professional Cleaning Services in Glen Iris",
+    intro: [
+      "Sitting between the CBD and the eastern suburbs, Glen Iris has always attracted families looking for leafy streets without giving up easy access to the city. The suburb spans both the Stonnington and Boroondara council areas, and we service properties across both sides without treating either as an afterthought.",
+      "Along High Street, Warrigal Road and the streets near Gardiners Creek Trail, we clean everything from original family homes to renovated period properties and architect-designed townhouses, working closely with families who need a cleaning schedule that actually holds up week to week."
+    ],
+    servicesOffered: ["regular-domestic", "house-for-sale", "end-of-lease"],
+    whyLocalsChooseUs: [
+      "Servicing both sides of Glen Iris across Stonnington and Boroondara",
+      "Experienced with leaf and pollen buildup from mature street trees and gardens",
+      "Careful with polished hardwood floors and heritage cornices in older homes",
+      "Reliable for families managing school-term routines near Sacré Cœur and Korowa",
+      "Comfortable in both original family homes and renovated architect-designed townhouses"
+    ],
+    propertyTypes: ["Family homes", "Renovated period homes", "Architect-designed townhouses"],
+    streetsAndLandmarks: ["High Street", "Toorak Road", "Burke Road", "Glen Iris Road", "Malvern Road", "Waverley Road", "Warrigal Road", "Tooronga Road", "Gardiners Creek Trail", "Harold Holt Swim Centre", "Glen Iris Railway Station", "Gardiner Railway Station", "Sacré Cœur", "Korowa Anglican Girls' School"],
+    localCleaningNeeds: "Mature gardens are one of the defining features of Glen Iris, and they bring a genuine seasonal cleaning load, leaf litter around entryways and courtyards, pollen settling on outdoor furniture and window sills, particularly through spring, which is also allergy season for a lot of local families with young kids. Inside, older properties often still have polished hardwood floors and heritage cornices that need gentler treatment than a standard clean, while the newer architect-designed townhouses closer to Tooronga Road tend to favour large glass surfaces that show streaks and dust more visibly.",
+    faq: [
+      { question: "Do you service both the Stonnington and Boroondara sides of Glen Iris?", answer: "Yes, we clean properties across the full suburb regardless of which council area they fall under." },
+      { question: "Can you help with spring pollen and allergy-related cleaning needs?", answer: "Yes, we pay extra attention to window sills, outdoor furniture and entryways during spring when pollen buildup is at its worst for local families." },
+      { question: "Do you clean polished hardwood floors in older Glen Iris homes?", answer: "Yes, we use appropriate non-abrasive methods on polished hardwood and heritage cornices to avoid dulling or damaging these surfaces." },
+      { question: "Is regular domestic cleaning available for families near Korowa or Sacré Cœur?", answer: "Yes, weekly and fortnightly cleaning is our most common booking in Glen Iris, scheduled around school-term routines." },
+      { question: "Do you offer end of lease cleaning for townhouses near Tooronga Road?", answer: "Yes, our end of lease service covers houses, townhouses and apartments throughout Glen Iris and is focused on getting your bond back." }
+    ],
+    nearbySuburbs: ["Malvern", "Ashburton", "Camberwell", "Hawthorn East", "Burwood"]
+  },
+
+  hawthorn: {
+    slug: "hawthorn",
+    name: "Hawthorn",
+    metaTitle: "Cleaning Services Hawthorn | Greenlight Cleaning",
+    metaDescription: "Cleaning for Hawthorn's heritage terraces, modern apartments and student rentals near Swinburne, with move-in and turnover options.",
+    h1: "Professional Cleaning Services in Hawthorn",
+    intro: [
+      "Few suburbs mix character quite like Hawthorn does. Heritage Victorian terraces sit a few doors down from glass-fronted apartment blocks, and the presence of Swinburne University means the suburb has a constant flow of students, young professionals and short-term renters moving through, alongside long-term family households.",
+      "That mix shapes how we work here. Along Glenferrie Road, Auburn Road and the streets around Central Gardens, our team switches between heritage-appropriate cleaning in older terraces and a faster, high-turnover approach for apartments and rentals that change hands often."
+    ],
+    servicesOffered: ["regular-domestic", "end-of-lease", "move-in", "airbnb-short-term-rental"],
+    whyLocalsChooseUs: [
+      "Experience with both heritage Victorian terraces and modern apartment fit-outs",
+      "Fast turnaround for student and rental properties near Swinburne",
+      "Appropriate product knowledge for engineered stone and floor-to-ceiling glass",
+      "Familiar with seasonal leaf debris on Hawthorn's older tree-lined streets",
+      "Flexible booking suited to shorter tenancy cycles and frequent move-ins"
+    ],
+    propertyTypes: ["Victorian terrace homes", "Modern apartments", "Student rentals", "Shared professional households"],
+    streetsAndLandmarks: ["Glenferrie Road", "Burwood Road", "Power Street", "Auburn Road", "Riversdale Road", "Swinburne University of Technology", "Glenferrie Railway Station", "Auburn Railway Station", "Central Gardens", "Scotch College", "Xavier College"],
+    localCleaningNeeds: "Hawthorn's rental and student population means turnover cleaning is a genuinely bigger part of life here than in most of the surrounding suburbs, tenants moving in and out of apartments near Glenferrie and Auburn stations need a fast, reliable clean between leases, and we're set up for exactly that. At the same time, the suburb's heritage terraces need a completely different approach, appropriate care for original detailing rather than the same quick pass used on a modern apartment. Mature street trees also mean seasonal leaf debris around entrances on the older blocks, something the newer apartment buildings largely avoid.",
+    faq: [
+      { question: "Do you offer fast turnaround cleaning for student rentals near Swinburne?", answer: "Yes, we understand Hawthorn has a lot of shorter tenancy cycles around the university, and we can accommodate quick turnaround bookings between move-outs and move-ins." },
+      { question: "Can you clean heritage Victorian terraces without damaging original features?", answer: "Yes, we use appropriate, non-abrasive methods on original detailing in Hawthorn's older terrace homes, distinct from how we'd approach a modern apartment." },
+      { question: "Do you offer move-in cleaning for new tenants or owners?", answer: "Yes, our move-in service gets a property genuinely clean and ready before you unpack, which matters a lot given how often properties change hands here." },
+      { question: "Is short-stay or Airbnb changeover cleaning available in Hawthorn?", answer: "Yes, given the volume of short-term renters and visiting students and professionals, we offer guest changeover cleaning for short-stay listings in the area." },
+      { question: "Do you provide end of lease cleaning for apartments near Glenferrie or Auburn stations?", answer: "Yes, our end of lease service covers apartments and terrace houses across Hawthorn and is built around getting your bond back." }
+    ],
+    nearbySuburbs: ["Hawthorn East", "Kew", "Richmond", "Camberwell", "Glen Iris"]
+  },
+
+  "bentleigh-east": {
+    slug: "bentleigh-east",
+    name: "Bentleigh East",
+    metaTitle: "Cleaning Services Bentleigh East | Greenlight Cleaning",
+    metaDescription: "Domestic and move-in cleaning for Bentleigh East's growing family homes and new townhouse developments near Centre Road.",
+    h1: "Professional Cleaning Services in Bentleigh East",
+    intro: [
+      "New townhouse developments have reshaped a lot of Bentleigh East over the past several years, and the suburb now has a mix of established family homes and brand-new builds sitting side by side along Centre Road, Tucker Road and East Boundary Road. Families here are typically stretched between work and school runs, with little spare time for anything beyond the essentials.",
+      "We fill that gap with straightforward, reliable domestic cleaning, along with move-in cleans for households settling into a new build and end of lease cleaning for renters shifting between properties near McKinnon Road or Chesterville Road."
+    ],
+    servicesOffered: ["regular-domestic", "move-in", "end-of-lease", "builders"],
+    whyLocalsChooseUs: [
+      "Experienced with the finer detail required in new townhouse builds",
+      "Reliable recurring cleaning for busy dual-income households",
+      "Move-in cleaning that accounts for construction dust in new developments",
+      "Straightforward pricing without unnecessary extras for standard homes",
+      "Comfortable working across a mix of established homes and new estates"
+    ],
+    propertyTypes: ["Modern townhouses", "New residential developments", "Established family homes"],
+    streetsAndLandmarks: ["Centre Road", "East Boundary Road", "Tucker Road", "Chesterville Road", "Mackie Road", "Bignell Road", "Brady Road", "McKinnon Road"],
+    localCleaningNeeds: "The steady growth of new townhouse developments across Bentleigh East means move-in cleaning is a genuinely common request here, freshly built or renovated properties often carry construction dust in vents, tracks and skirting that a standard clean won't fully lift, and we account for that specifically rather than treating a new build the same as an established home. Beyond that, most of our work is recurring domestic cleaning for families juggling work and school schedules who simply don't have the spare hours a house needs each week, and we build a schedule that takes that pressure off without adding another thing to manage.",
+    faq: [
+      { question: "Do you offer move-in cleaning for new townhouse builds?", answer: "Yes, we account for construction dust in vents, tracks and skirting boards that's common in newly built or newly renovated Bentleigh East properties." },
+      { question: "Can you set up a regular weekly or fortnightly clean for a busy family?", answer: "Yes, recurring domestic cleaning is our most common booking type in Bentleigh East, and we schedule around work and school-run routines." },
+      { question: "Do you clean both new developments and older established homes?", answer: "Yes, we service the full mix of property types across the suburb, from brand-new townhouses to long-established family homes." },
+      { question: "Is builders clean cleaning available after renovation work?", answer: "Yes, our builders clean service is suited to post-renovation and post-construction properties, common given the pace of development in this area." },
+      { question: "Do you offer end of lease cleaning near Centre Road or McKinnon Road?", answer: "Yes, our end of lease service covers houses, townhouses and apartments throughout Bentleigh East and is focused on getting your bond back." }
+    ],
+    nearbySuburbs: ["McKinnon", "Ormond", "Moorabbin", "Oakleigh South", "Carnegie", "Brighton East", "Caulfield South", "Hampton East"]
+  }
+};
+
+const SUBURB_PAGE_SLUGS: Record<string, string> = {
+  brighton: "brighton-cleaning-services",
+  hampton: "hampton-cleaning-services",
+  camberwell: "camberwell-cleaning-services",
+  malvern: "malvern-cleaning-services",
+  toorak: "toorak-cleaning-services",
+  "glen-iris": "glen-iris-cleaning-services",
+  hawthorn: "hawthorn-cleaning-services",
+  "bentleigh-east": "bentleigh-east-cleaning-services"
+};
 
 const AREAS: string[] = [
   "Bentleigh", "Bentleigh East", "Brighton", "Hampton", "Black Rock", "Sandringham",
@@ -1380,6 +1740,135 @@ function QuickContactCluster() {
   );
 }
 
+const CLEANING_TYPES = [
+  "Regular Domestic Cleaning",
+  "End of Lease Cleaning",
+  "Commercial Cleaning",
+  "NDIS Cleaning",
+  "Aged Care Cleaning",
+  "Builder's Cleaning & Post Renovation Cleaning",
+  "Move In Cleaning",
+  "Airbnb & Short-Term Rental Cleaning",
+  "Other"
+];
+
+function EnquiryForm() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const name = (data.get("name") as string) || "";
+    const phone = (data.get("phone") as string) || "";
+    const email = (data.get("email") as string) || "";
+    const cleaningType = (data.get("cleaningType") as string) || "";
+    const propertySize = (data.get("propertySize") as string) || "";
+    const suburb = (data.get("suburb") as string) || "";
+    const preferredDate = (data.get("preferredDate") as string) || "";
+    const message = (data.get("message") as string) || "";
+
+    const lines = [
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      `Email: ${email}`,
+      `Cleaning Type: ${cleaningType}`,
+      `Suburb: ${suburb}`
+    ];
+    if (propertySize) lines.push(`Property Size: ${propertySize}`);
+    if (preferredDate) lines.push(`Preferred Date: ${preferredDate}`);
+    if (message) lines.push(`Message: ${message}`);
+
+    const summary = lines.join("\n");
+    const subject = `Cleaning Enquiry from ${name}`;
+
+    const mailtoLink = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary)}`;
+    const waLink = `https://wa.me/61430230971?text=${encodeURIComponent(summary)}`;
+
+    window.open(waLink, "_blank");
+    window.location.href = mailtoLink;
+
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">
+        <p className="text-white">
+          Thank you for your enquiry. Greenlight Cleaning has received your request and we will contact you shortly.
+        </p>
+      </div>
+    );
+  }
+
+  const inputCls = "w-full rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-white placeholder:text-slate-400 outline-none focus:border-emerald-400";
+  const labelCls = "mb-1.5 block text-sm font-medium text-white/80";
+
+  return (
+    <div className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">
+      <h3 className="text-lg font-semibold text-white">Get a Free Quote</h3>
+      <p className="mt-1 text-sm text-slate-400">Fill in your details and we'll get back to you shortly.</p>
+
+      <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+        <div>
+          <label htmlFor="name" className={labelCls}>Name</label>
+          <input id="name" name="name" type="text" required className={inputCls} placeholder="Your full name" />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="phone" className={labelCls}>Phone</label>
+            <input id="phone" name="phone" type="tel" required className={inputCls} placeholder="04XX XXX XXX" />
+          </div>
+          <div>
+            <label htmlFor="email" className={labelCls}>Email</label>
+            <input id="email" name="email" type="email" required className={inputCls} placeholder="you@email.com" />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="cleaningType" className={labelCls}>Cleaning Type Needed</label>
+          <select id="cleaningType" name="cleaningType" required defaultValue="" className={inputCls}>
+            <option value="" disabled>Select a service</option>
+            {CLEANING_TYPES.map((type) => (
+              <option key={type} value={type} className="text-slate-900">{type}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="propertySize" className={labelCls}>Property Size (optional)</label>
+            <input id="propertySize" name="propertySize" type="text" className={inputCls} placeholder="e.g. 3 bed / 2 bath" />
+          </div>
+          <div>
+            <label htmlFor="suburb" className={labelCls}>Suburb</label>
+            <input id="suburb" name="suburb" type="text" required className={inputCls} placeholder="e.g. Brighton" />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="preferredDate" className={labelCls}>Preferred Date (optional)</label>
+          <input id="preferredDate" name="preferredDate" type="date" className={inputCls} />
+        </div>
+
+        <div>
+          <label htmlFor="message" className={labelCls}>Message (optional)</label>
+          <textarea id="message" name="message" rows={3} className={inputCls} placeholder="Any extra details we should know" />
+        </div>
+
+        <button
+          type="submit"
+          className="gl-cta gl-tap inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30"
+        >
+          Send Enquiry
+        </button>
+      </form>
+    </div>
+  );
+}
+
 function HeroSection() {
   const navigate = useNavigate();
   const highlights: IconItem[] = [
@@ -1445,6 +1934,9 @@ function HeroSection() {
                 View all services <ArrowRight className="h-4 w-4" />
               </button>
             </div>
+          </Reveal>
+          <Reveal delay={0.3}>
+            <EnquiryForm />
           </Reveal>
         </div>
       </Container>
@@ -1867,6 +2359,195 @@ function DynamicServiceView() {
 }
 
 /* ============================================================
+   SUBURB PAGE VIEW
+   ============================================================ */
+function SuburbPageView() {
+  const { suburbSlug } = useParams<{ suburbSlug: string }>();
+  const lookupKey = (suburbSlug || "").replace(/-cleaning-services$/, "");
+  const suburb = SUBURBS[lookupKey];
+
+  useEffect(() => {
+    if (!suburb) return;
+    document.title = suburb.metaTitle;
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "description");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", suburb.metaDescription);
+  }, [suburb]);
+
+  if (!suburb) {
+    return (
+      <Container className="py-24 text-center">
+        <p className="text-slate-600">This service area page is coming soon.</p>
+        <Link to="/service-areas" className="text-emerald-600 underline">
+          View all service areas
+        </Link>
+      </Container>
+    );
+  }
+
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Cleaning Services",
+    provider: {
+      "@type": "LocalBusiness",
+      name: "Greenlight Cleaning Pty Ltd",
+      telephone: "+61430230971",
+      email: EMAIL
+    },
+    areaServed: { "@type": "Place", name: suburb.name },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: `Cleaning Services in ${suburb.name}`,
+      itemListElement: suburb.servicesOffered
+        .filter((key) => SERVICES[key])
+        .map((key) => ({
+          "@type": "Offer",
+          itemOffered: { "@type": "Service", name: SERVICES[key].name }
+        }))
+    }
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: suburb.faq.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer }
+    }))
+  };
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      {suburb.faq.length > 0 && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      )}
+
+      <Container className="py-16">
+        <Reveal>
+          <Eyebrow>{suburb.name} Cleaning Services</Eyebrow>
+          <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">{suburb.h1}</h1>
+        </Reveal>
+
+        <Reveal delay={0.05} className="mt-6 space-y-4 text-slate-600">
+          {suburb.intro.map((p, i) => (
+            <p key={i} className="leading-relaxed">{p}</p>
+          ))}
+        </Reveal>
+
+        {suburb.servicesOffered.length > 0 && (
+          <Reveal delay={0.1}>
+            <h2 className="mt-12 text-xl font-bold tracking-tight text-slate-900">Services We Offer in {suburb.name}</h2>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {suburb.servicesOffered.map((key) => {
+                const service = SERVICES[key];
+                if (!service) return null;
+                return (
+                  <Link
+                    key={key}
+                    to={`/services/${key}`}
+                    className="gl-elevate rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 hover:border-emerald-400"
+                  >
+                    {service.name}
+                  </Link>
+                );
+              })}
+            </div>
+          </Reveal>
+        )}
+
+        {suburb.whyLocalsChooseUs.length > 0 && (
+          <Reveal delay={0.15}>
+            <h2 className="mt-12 text-xl font-bold tracking-tight text-slate-900">Why {suburb.name} Locals Choose Us</h2>
+            <ul className="mt-4 space-y-2">
+              {suburb.whyLocalsChooseUs.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-slate-600">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        )}
+
+        {suburb.propertyTypes.length > 0 && (
+          <Reveal delay={0.2}>
+            <h2 className="mt-12 text-xl font-bold tracking-tight text-slate-900">Property Types We Clean</h2>
+            <ul className="mt-4 list-disc space-y-1 pl-5 text-slate-600">
+              {suburb.propertyTypes.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+          </Reveal>
+        )}
+
+        {suburb.streetsAndLandmarks.length > 0 && (
+          <Reveal delay={0.25}>
+            <h2 className="mt-12 text-xl font-bold tracking-tight text-slate-900">Areas We Cover Near You</h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {suburb.streetsAndLandmarks.map((item, i) => (
+                <span key={i} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        )}
+
+        {suburb.localCleaningNeeds && (
+          <Reveal delay={0.3}>
+            <div className="mt-12 rounded-2xl border border-emerald-100 bg-emerald-50 p-6">
+              <h2 className="text-xl font-bold tracking-tight text-slate-900">Cleaning Needs in {suburb.name}</h2>
+              <p className="mt-3 leading-relaxed text-slate-600">{suburb.localCleaningNeeds}</p>
+            </div>
+          </Reveal>
+        )}
+
+        {suburb.faq.length > 0 && (
+          <Reveal delay={0.35}>
+            <h2 className="mt-12 text-xl font-bold tracking-tight text-slate-900">Frequently Asked Questions</h2>
+            <div className="mt-4 space-y-3">
+              {suburb.faq.map((f, i) => (
+                <details key={i} className="gl-elevate rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <summary className="cursor-pointer font-medium text-slate-800">{f.question}</summary>
+                  <p className="mt-2 text-sm text-slate-600">{f.answer}</p>
+                </details>
+              ))}
+            </div>
+          </Reveal>
+        )}
+
+        {suburb.nearbySuburbs.length > 0 && (
+          <Reveal delay={0.4}>
+            <h2 className="mt-12 text-xl font-bold tracking-tight text-slate-900">Nearby Areas We Service</h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {suburb.nearbySuburbs.map((s, i) => (
+                <span key={i} className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        )}
+
+        <Reveal delay={0.45} className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <EmeraldButton href={WA}>
+            <WhatsAppIcon className="h-5 w-5" /> Get a Free Quote
+          </EmeraldButton>
+          <OutlineButton href="/service-areas">View All Service Areas</OutlineButton>
+        </Reveal>
+      </Container>
+    </>
+  );
+}
+
+/* ============================================================
    BEFORE / AFTER GALLERY
    ============================================================ */
 function BeforeAfter({ title, sublabel, beforeImage, afterImage }: {
@@ -2129,14 +2810,28 @@ function AreasPage() {
             <p className="mt-4 text-slate-600">We cover most of Melbourne's southeast, with additional coverage across the north and west. If your suburb is on the list, we clean there.</p>
           </Reveal>
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
-            {AREAS.map((a, i) => (
-              <Reveal key={a} delay={(i % 4) * 0.05}>
-                <div className="gl-elevate flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                  <MapPin className="h-4 w-4 shrink-0 text-emerald-500" />
-                  <span className="text-sm font-medium text-slate-700">{a}</span>
-                </div>
-              </Reveal>
-            ))}
+            {AREAS.map((a, i) => {
+              const key = a.toLowerCase().replace(/\s+/g, "-");
+              const pageSlug = SUBURB_PAGE_SLUGS[key];
+              return (
+                <Reveal key={a} delay={(i % 4) * 0.05}>
+                  {pageSlug ? (
+                    <Link
+                      to={`/service-areas/${pageSlug}`}
+                      className="gl-elevate flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 hover:border-emerald-400"
+                    >
+                      <MapPin className="h-4 w-4 shrink-0 text-emerald-500" />
+                      <span className="text-sm font-medium text-slate-700">{a}</span>
+                    </Link>
+                  ) : (
+                    <div className="gl-elevate flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <MapPin className="h-4 w-4 shrink-0 text-emerald-500" />
+                      <span className="text-sm font-medium text-slate-700">{a}</span>
+                    </div>
+                  )}
+                </Reveal>
+              );
+            })}
           </div>
         </Container>
       </section>
@@ -2377,6 +3072,7 @@ function AppShell({ state, dispatch }: { state: State; dispatch: Dispatch }) {
           <Route path="/" element={<HomePage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/services/:serviceKey" element={<DynamicServiceView />} />
+          <Route path="/service-areas/:suburbSlug" element={<SuburbPageView />} />
           <Route path="/gallery" element={<BeforeAfterGallery />} />
           <Route path="/service-areas" element={<AreasPage />} />
           <Route path="/about" element={<AboutPage />} />
