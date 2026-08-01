@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://greenlight-cleaning.vercel.app/sitemap.xml
