@@ -6,7 +6,7 @@ import {
   Menu, X, Phone, Mail, MessageCircle, MapPin, Check, CheckCircle2, Star,
   Shield, ArrowRight, ChevronRight, Clock, Award, ArrowLeft,
   Home, Building2, KeyRound, Truck, Paintbrush2, Hammer, Tag,
-  HeartHandshake, Accessibility, Layers, Smartphone, BedDouble
+  HeartHandshake, Accessibility, Layers, Smartphone, BedDouble, ChevronDown
 } from "lucide-react";
 
 /* ============================================================
@@ -1640,37 +1640,123 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
    ============================================================ */
 function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   const location = useLocation();
-  const links: NavLink[] = [
-    { label: "Home", path: "/" },
-    { label: "Services", path: "/services" },
-    { label: "Gallery", path: "/gallery" },
-    { label: "Service Areas", path: "/service-areas" },
-    { label: "About", path: "/about" },
-    { label: "Contact", path: "/contact" }
-  ];
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileSection, setMobileSection] = useState<string | null>(null);
+
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
     if (path === "/services") return location.pathname.startsWith("/services");
+    if (path === "/service-areas") return location.pathname.startsWith("/service-areas");
     return location.pathname === path;
   };
+
+  const closeEverything = () => {
+    setOpenDropdown(null);
+    setMobileSection(null);
+    dispatch({ type: "CLOSE_MENU" });
+  };
+
+  const navItem = (active: boolean) =>
+    `inline-flex items-center gap-1 gl-tap rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+      active ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"
+    }`;
+
+  const suburbKeys = Object.keys(SUBURBS);
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white shadow-sm">
       <Container className="flex h-16 items-center justify-between lg:h-20">
-        <Link to="/" className="gl-fade-in flex items-center gap-3 gl-tap" onClick={() => dispatch({ type: "CLOSE_MENU" })}>
+        <Link to="/" className="gl-fade-in flex items-center gap-3 gl-tap" onClick={closeEverything}>
           <img src="/logo.png" alt="Greenlight Cleaning Pty Ltd" className="h-10 w-auto" />
-          <span className="text-xl font-extrabold tracking-tighter text-slate-900">Greenlight Cleaning</span>
+          <span className="text-lg font-extrabold tracking-tighter text-slate-900 sm:text-xl">Greenlight Cleaning</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {links.map((l) => (
-            <Link
-              key={l.path}
-              to={l.path}
-              className={`inline-flex items-center gl-tap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${isActive(l.path) ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"}`}
-            >
-              {l.label}
+        {/* Desktop navigation with dropdowns */}
+        <nav className="hidden items-center gap-0.5 lg:flex">
+          <Link to="/" className={navItem(isActive("/"))}>Home</Link>
+
+          {/* Services dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setOpenDropdown("services")}
+            onMouseLeave={() => setOpenDropdown(null)}
+          >
+            <Link to="/services" className={navItem(isActive("/services"))}>
+              Services
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${openDropdown === "services" ? "rotate-180" : ""}`} />
             </Link>
-          ))}
+            {openDropdown === "services" && (
+              <div className="absolute left-1/2 top-full z-50 w-[36rem] -translate-x-1/2 pt-2">
+                <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-xl">
+                  <div className="grid grid-cols-2 gap-1">
+                    {SERVICE_KEYS.map((k) => {
+                      const Icon = ICONS[SERVICES[k].icon];
+                      return (
+                        <Link
+                          key={k}
+                          to={`/services/${k}`}
+                          onClick={() => setOpenDropdown(null)}
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-emerald-600"
+                        >
+                          <Icon className="h-4 w-4 shrink-0 text-emerald-500" />
+                          <span className="leading-tight">{SERVICES[k].name}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  <Link
+                    to="/services"
+                    onClick={() => setOpenDropdown(null)}
+                    className="mt-2 flex items-center justify-center gap-1.5 rounded-xl border-t border-slate-100 px-3 py-2.5 text-sm font-semibold text-emerald-600 hover:bg-slate-50"
+                  >
+                    View all services <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Service Areas dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setOpenDropdown("areas")}
+            onMouseLeave={() => setOpenDropdown(null)}
+          >
+            <Link to="/service-areas" className={navItem(isActive("/service-areas"))}>
+              Service Areas
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${openDropdown === "areas" ? "rotate-180" : ""}`} />
+            </Link>
+            {openDropdown === "areas" && (
+              <div className="absolute left-1/2 top-full z-50 w-[28rem] -translate-x-1/2 pt-2">
+                <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-xl">
+                  <div className="grid grid-cols-2 gap-1">
+                    {suburbKeys.map((key) => (
+                      <Link
+                        key={key}
+                        to={`/service-areas/${SUBURB_PAGE_SLUGS[key]}`}
+                        onClick={() => setOpenDropdown(null)}
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-emerald-600"
+                      >
+                        <MapPin className="h-4 w-4 shrink-0 text-emerald-500" />
+                        <span className="leading-tight">{SUBURBS[key].name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                  <Link
+                    to="/service-areas"
+                    onClick={() => setOpenDropdown(null)}
+                    className="mt-2 flex items-center justify-center gap-1.5 rounded-xl border-t border-slate-100 px-3 py-2.5 text-sm font-semibold text-emerald-600 hover:bg-slate-50"
+                  >
+                    View all service areas <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Link to="/gallery" className={navItem(isActive("/gallery"))}>Gallery</Link>
+          <Link to="/about" className={navItem(isActive("/about"))}>About</Link>
+          <Link to="/contact" className={navItem(isActive("/contact"))}>Contact</Link>
         </nav>
 
         <div className="hidden lg:block">
@@ -1688,20 +1774,93 @@ function Navigation({ state, dispatch }: { state: State; dispatch: Dispatch }) {
         </button>
       </Container>
 
+      {/* Mobile menu with expandable Services and Service Areas */}
       {state.isMenuOpen && (
-        <div className="border-t border-slate-200 bg-white lg:hidden">
+        <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-200 bg-white lg:hidden">
           <Container className="flex flex-col gap-1 py-4">
-            {links.map((l) => (
-              <Link
-                key={l.path}
-                to={l.path}
-                onClick={() => dispatch({ type: "CLOSE_MENU" })}
-                className="flex items-center justify-between gl-tap rounded-lg px-3 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
-              >
-                {l.label}
-                <ChevronRight className="h-4 w-4 text-slate-400" />
-              </Link>
-            ))}
+            <Link
+              to="/"
+              onClick={closeEverything}
+              className="flex items-center justify-between gl-tap rounded-lg px-3 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Home <ChevronRight className="h-4 w-4 text-slate-400" />
+            </Link>
+
+            {/* Services accordion */}
+            <button
+              onClick={() => setMobileSection(mobileSection === "services" ? null : "services")}
+              className="flex items-center justify-between gl-tap rounded-lg px-3 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Services
+              <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${mobileSection === "services" ? "rotate-180" : ""}`} />
+            </button>
+            {mobileSection === "services" && (
+              <div className="mb-1 flex flex-col gap-0.5 rounded-xl bg-slate-50 p-2">
+                {SERVICE_KEYS.map((k) => {
+                  const Icon = ICONS[SERVICES[k].icon];
+                  return (
+                    <Link
+                      key={k}
+                      to={`/services/${k}`}
+                      onClick={closeEverything}
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-white"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-emerald-500" />
+                      {SERVICES[k].name}
+                    </Link>
+                  );
+                })}
+                <Link
+                  to="/services"
+                  onClick={closeEverything}
+                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-emerald-600 hover:bg-white"
+                >
+                  View all services
+                </Link>
+              </div>
+            )}
+
+            {/* Service Areas accordion */}
+            <button
+              onClick={() => setMobileSection(mobileSection === "areas" ? null : "areas")}
+              className="flex items-center justify-between gl-tap rounded-lg px-3 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            >
+              Service Areas
+              <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${mobileSection === "areas" ? "rotate-180" : ""}`} />
+            </button>
+            {mobileSection === "areas" && (
+              <div className="mb-1 flex flex-col gap-0.5 rounded-xl bg-slate-50 p-2">
+                {suburbKeys.map((key) => (
+                  <Link
+                    key={key}
+                    to={`/service-areas/${SUBURB_PAGE_SLUGS[key]}`}
+                    onClick={closeEverything}
+                    className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-white"
+                  >
+                    <MapPin className="h-4 w-4 shrink-0 text-emerald-500" />
+                    {SUBURBS[key].name}
+                  </Link>
+                ))}
+                <Link
+                  to="/service-areas"
+                  onClick={closeEverything}
+                  className="rounded-lg px-3 py-2.5 text-sm font-semibold text-emerald-600 hover:bg-white"
+                >
+                  View all service areas
+                </Link>
+              </div>
+            )}
+
+            <Link to="/gallery" onClick={closeEverything} className="flex items-center justify-between gl-tap rounded-lg px-3 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">
+              Gallery <ChevronRight className="h-4 w-4 text-slate-400" />
+            </Link>
+            <Link to="/about" onClick={closeEverything} className="flex items-center justify-between gl-tap rounded-lg px-3 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">
+              About <ChevronRight className="h-4 w-4 text-slate-400" />
+            </Link>
+            <Link to="/contact" onClick={closeEverything} className="flex items-center justify-between gl-tap rounded-lg px-3 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50">
+              Contact <ChevronRight className="h-4 w-4 text-slate-400" />
+            </Link>
+
             <EmeraldButton href={TEL} className="mt-2 w-full">
               <Phone className="h-4 w-4" /> Call {PHONE_DISPLAY}
             </EmeraldButton>
@@ -1881,7 +2040,7 @@ function HeroSection() {
     <section className="relative overflow-hidden bg-slate-900 text-white">
       <div className="gl-hero-glow" />
       <QuickContactCluster />
-      <Container className="relative grid items-center gap-12 py-20 lg:grid-cols-12 lg:py-28">
+      <Container className="relative grid items-center gap-10 py-12 lg:grid-cols-12 lg:py-16">
         <div className="lg:col-span-7">
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-bold uppercase tracking-tight text-emerald-300">
@@ -2625,6 +2784,90 @@ function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
 }
 
 /* ============================================================
+   QUICK SERVICES BAR — top-of-page service navigation
+   ============================================================ */
+function QuickServicesBar() {
+  return (
+    <section className="border-b border-slate-200 bg-white py-8 sm:py-10">
+      <Container>
+        <Reveal className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <Eyebrow>Our services</Eyebrow>
+            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+              What can we clean for you?
+            </h2>
+          </div>
+          <Link to="/services" className="inline-flex items-center gap-1.5 gl-tap text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+            See all services <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Reveal>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {SERVICE_KEYS.map((k, i) => {
+            const s = SERVICES[k];
+            const Icon = ICONS[s.icon];
+            return (
+              <Reveal key={k} delay={(i % 5) * 0.04}>
+                <Link
+                  to={`/services/${k}`}
+                  className="gl-elevate flex h-full flex-col items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-3 py-4 text-center hover:border-emerald-400"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600">
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <span className="text-sm font-semibold leading-tight text-slate-800">{s.name}</span>
+                </Link>
+              </Reveal>
+            );
+          })}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/* ============================================================
+   SERVICE AREAS STRIP — top-of-page suburb navigation
+   ============================================================ */
+function ServiceAreasStrip() {
+  const suburbKeys = Object.keys(SUBURBS);
+  return (
+    <section className="border-b border-slate-200 bg-slate-50 py-8 sm:py-10">
+      <Container>
+        <Reveal className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <Eyebrow>Service areas</Eyebrow>
+            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+              Where we clean across Melbourne
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm text-slate-600">
+              Find cleaning services in your local suburb, or view our full coverage across Melbourne's southeast.
+            </p>
+          </div>
+          <Link to="/service-areas" className="inline-flex shrink-0 items-center gap-1.5 gl-tap text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+            All service areas <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Reveal>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {suburbKeys.map((key, i) => (
+            <Reveal key={key} delay={(i % 4) * 0.04}>
+              <Link
+                to={`/service-areas/${SUBURB_PAGE_SLUGS[key]}`}
+                className="gl-elevate flex h-full items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 hover:border-emerald-400"
+              >
+                <MapPin className="h-4 w-4 shrink-0 text-emerald-500" />
+                <span className="text-sm font-semibold leading-tight text-slate-800">{SUBURBS[key].name}</span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/* ============================================================
    PAGE: HOME
    ============================================================ */
 function HomePage() {
@@ -2632,6 +2875,8 @@ function HomePage() {
   return (
     <>
       <HeroSection />
+      <QuickServicesBar />
+      <ServiceAreasStrip />
       <StatsBand />
       
       <section className="bg-white py-16 sm:py-20">
@@ -2710,8 +2955,8 @@ function HomePage() {
         <Container>
           <Reveal className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl">
-              <Eyebrow>What we clean</Eyebrow>
-              <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Ten cleaning services, one trusted team</h2>
+              <Eyebrow>Full service details</Eyebrow>
+              <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Every service, explained in full</h2>
             </div>
             <button onClick={() => navigate("/services")} className="inline-flex items-center gap-1.5 gl-tap text-sm font-semibold text-emerald-600">
               See all services <ArrowRight className="h-4 w-4" />
@@ -2962,9 +3207,21 @@ function Footer() {
         <div className="lg:col-span-3">
           <h4 className="text-sm font-bold uppercase tracking-tight text-white">Service areas</h4>
           <div className="mt-4 flex flex-wrap gap-1.5">
-            {AREAS.map((a) => (
-              <span key={a} className="rounded-md bg-white/5 px-2 py-1 text-xs text-slate-400">{a}</span>
-            ))}
+            {AREAS.map((a) => {
+              const key = a.toLowerCase().replace(/\s+/g, "-");
+              const pageSlug = SUBURB_PAGE_SLUGS[key];
+              return pageSlug ? (
+                <Link
+                  key={a}
+                  to={`/service-areas/${pageSlug}`}
+                  className="rounded-md bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-300 hover:bg-emerald-500/20"
+                >
+                  {a}
+                </Link>
+              ) : (
+                <span key={a} className="rounded-md bg-white/5 px-2 py-1 text-xs text-slate-400">{a}</span>
+              );
+            })}
           </div>
         </div>
       </Container>
