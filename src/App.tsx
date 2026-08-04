@@ -1077,43 +1077,122 @@ const SERVICES: Record<string, Service> = {
   "airbnb-short-term-rental": {
     icon: "bed",
     name: "Airbnb & Short-Term Rental Cleaning",
-    summary: "Fast, reliable turnover cleaning between guest stays, built for hosts who can't afford a bad review over a missed corner.",
+    summary: "Professional Airbnb turnover cleaning built around five-star guest presentation, not just a standard clean.",
     intro: [
-      "Guest changeovers run on a tight clock. We turn properties around between checkout and check-in with a consistent, repeatable clean covering bedrooms, bathrooms, kitchen and living areas, so every guest walks into a space that looks freshly presented.",
-      "We work with hosts and property managers across Airbnb, Booking.com, Stayz, Vrbo, corporate accommodation providers, granny flats and self-contained units. Every clean follows the same checklist regardless of which platform the booking came through."
+      "Delivering a five-star guest experience starts with a perfectly prepared property. We provide comprehensive Airbnb turnover services that go beyond standard cleaning, helping hosts present their properties to the highest standard while saving valuable time between guest bookings.",
+      "Whether you manage one property or multiple short-term rentals, our experienced team ensures your home is clean, guest-ready and professionally presented before every check-in."
     ],
     groups: [
       {
-        title: "Standard Changeover Clean",
+        title: "General Cleaning",
         items: [
-          "Bedrooms dusted, surfaces wiped, floors vacuumed or mopped",
-          "Bathrooms sanitised, including shower, toilet, vanity and mirrors",
-          "Kitchen benches, sink, stovetop and exterior of appliances wiped down",
-          "Living areas tidied, dusted and floors cleaned",
-          "Beds stripped and remade with fresh linen",
-          "Rubbish and recycling removed from the property",
-          "Guest supplies restocked where arranged with the host (toiletries, tea/coffee, toilet paper)"
+          "Vacuuming and mopping all floors",
+          "Thorough bathroom cleaning and sanitising",
+          "Kitchen cleaning, including benchtops, sink, splashback and cooktop",
+          "Exterior cleaning of kitchen appliances",
+          "Dusting all reachable surfaces",
+          "Cleaning mirrors and glass surfaces",
+          "Emptying rubbish bins and replacing liners",
+          "Spot cleaning doors, light switches and marks where required",
+          "Removing cobwebs",
+          "Final presentation inspection"
         ]
       },
       {
-        title: "Property Types & Platforms We Service",
+        title: "Bed Making & Linen Change",
         items: [
-          "Airbnb and Booking.com listings",
-          "Stayz and Vrbo listings",
-          "Corporate accommodation and serviced apartments",
-          "Granny flats and self-contained units"
+          "Strip used bed linen",
+          "Replace beds with fresh linen",
+          "Make beds to hotel presentation standards",
+          "Arrange pillows and bedding professionally"
         ]
       },
       {
-        title: "Property Condition Checks",
+        title: "Guest-Ready Final Checklist",
         items: [
-          "Basic visual walkthrough during every clean",
-          "Photo report sent to the host for any visible damage or maintenance issue spotted",
-          "This is a visual check as part of the clean, not a formal property inspection"
+          "Beds professionally made",
+          "Bathrooms fully prepared",
+          "Kitchen clean and ready for use",
+          "Floors vacuumed and mopped",
+          "Rubbish removed",
+          "Property presentation checked",
+          "Lights switched off where appropriate",
+          "Doors and windows secured",
+          "Air conditioning set as requested",
+          "Essential guest supplies checked"
         ]
       }
     ],
+    introList: {
+      title: "Property inspection covers",
+      items: [
+        "Accidental guest damage",
+        "Broken furniture or appliances",
+        "Missing items",
+        "Excessive stains or unusual mess",
+        "Safety concerns",
+        "General wear and tear"
+      ]
+    },
     contentBlocks: [
+      {
+        kind: "text",
+        title: "Linen Laundry & Rotation Service (Optional Extra)",
+        body: "Take the hassle out of managing Airbnb laundry. Our optional linen rotation service includes:",
+        items: [
+          "Collecting used sheets, pillowcases and towels",
+          "Professionally washing all linen off-site",
+          "Drying and folding linen",
+          "Preparing fresh linen for your next booking",
+          "Delivering clean linen during your next scheduled service",
+          "Removing used linen after every turnover to be professionally cleaned and prepared for the following guest"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Property Inspection & Host Support",
+        body: "Cleaning is only part of preparing an Airbnb property. Before every clean, our team carries out a visual property inspection to identify any issues left by previous guests. If any damage or concerns are found, we'll notify you promptly so you can decide whether to request reimbursement through Airbnb or arrange repairs before your next guest arrives."
+      },
+      {
+        kind: "text",
+        title: "Photo Reports After Every Visit",
+        body: "After completing the clean, we provide photo updates to give you confidence that your property is fully prepared, including:",
+        items: [
+          "Photos of completed cleaning",
+          "Photos of any damage or maintenance concerns",
+          "Confirmation that the property is guest-ready",
+          "General condition updates where required"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Host Supply Monitoring",
+        body: "We monitor essential guest supplies during every visit and let you know if anything needs replenishing, including:",
+        items: [
+          "Toilet paper and paper towels",
+          "Hand soap, shampoo & conditioner, body wash",
+          "Dishwashing liquid",
+          "Bin liners",
+          "Coffee, tea or welcome amenities",
+          "Cleaning supplies",
+          "Any other host-provided essentials"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Maintenance Reporting",
+        body: "If we identify maintenance issues while cleaning, we'll let you know immediately, including:",
+        items: [
+          "Water leaks",
+          "Broken lights",
+          "Appliance faults",
+          "Loose door handles",
+          "Damaged furniture",
+          "Mould or moisture issues",
+          "Air-conditioning problems",
+          "General maintenance concerns"
+        ]
+      },
       {
         kind: "rates",
         title: "Changeover Cleaning Rates",
@@ -1127,19 +1206,38 @@ const SERVICES: Record<string, Service> = {
           ["5 Bed / 2 Bath", "$250", "$300", "$350", "$400", "$450"],
           ["5 Bed / 3 Bath", "$270", "$320", "$370", "$420", "$470"]
         ],
-        footnote: "Base price includes linen service for the first occupied bedroom. Add $50 per additional occupied bedroom needing linen changed."
+        footnote: "Base price includes linen service for the first occupied bedroom. Add $50 per additional occupied bedroom needing linen changed. Linen laundry & rotation is charged separately from the standard cleaning fee."
       },
       {
         kind: "text",
         title: "Optional Extras",
         items: [
-          "Extra towels/linen — from $20",
-          "Oven cleaning — from $40",
-          "BBQ cleaning — from $40",
-          "Balcony/outdoor area — from $30",
-          "Excess rubbish removal — from $20",
-          "Pet hair removal — from $30",
+          "Inside oven cleaning",
+          "Inside refrigerator cleaning",
+          "Window cleaning",
+          "Balcony or outdoor area cleaning",
+          "Deep cleaning",
+          "Additional linen changes",
+          "Restocking guest amenities",
+          "Interior cupboard cleaning",
+          "Garage or storage area cleaning",
           "Same-day emergency turnover — priced on application"
+        ]
+      },
+      {
+        kind: "text",
+        title: "Why Choose Greenlight Cleaning?",
+        items: [
+          "Reliable Airbnb turnover specialists",
+          "Professional and fully insured cleaners",
+          "Hotel-quality presentation standards",
+          "Optional off-site linen washing and rotation",
+          "Property inspections before every clean",
+          "Photo reports after every visit",
+          "Damage and maintenance reporting",
+          "Host supply monitoring",
+          "Flexible scheduling between bookings",
+          "Helping hosts achieve better guest reviews and repeat bookings"
         ]
       }
     ],
