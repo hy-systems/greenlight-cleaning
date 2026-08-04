@@ -6,7 +6,7 @@ import {
   Menu, X, Phone, Mail, MessageCircle, MapPin, Check, CheckCircle2, Star,
   Shield, ArrowRight, ChevronRight, Clock, Award, ArrowLeft,
   Home, Building2, KeyRound, Truck, Paintbrush2, Hammer, Tag,
-  HeartHandshake, Accessibility, Layers, Smartphone, BedDouble, ChevronDown
+  HeartHandshake, Accessibility, Layers, Smartphone, BedDouble, ChevronDown, Sparkles, PanelTop
 } from "lucide-react";
 
 /* ============================================================
@@ -79,7 +79,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 const ICONS: Record<string, React.ElementType> = {
   home: Home, building: Building2, key: KeyRound, truck: Truck,
   paint: Paintbrush2, hammer: Hammer, tag: Tag, access: Accessibility,
-  heart: HeartHandshake, layers: Layers, bed: BedDouble
+  heart: HeartHandshake, layers: Layers, bed: BedDouble, sparkle: Sparkles, window: PanelTop
 };
 
 const NDIS_PROVIDERS: string[] = [
@@ -1145,6 +1145,124 @@ const SERVICES: Record<string, Service> = {
     ],
     note: "Pricing is based on the number of bedrooms actually occupied by guests, not the total bedrooms in the property. Base price includes linen service for the first occupied bedroom, plus $50 per additional occupied bedroom needing linen changed. Linen washing, drying and collection is available as an optional add-on, arranged and priced separately from the standard clean.",
     quote: false
+  },
+
+  "deep-cleaning": {
+    icon: "sparkle",
+    name: "Deep Cleaning",
+    summary: "A thorough top-to-bottom clean for homes that need more than a standard visit.",
+    intro: [
+      "Deep cleaning goes further than a regular clean, reaching the buildup that accumulates over months rather than days. It's the right choice before a big event, after a long stretch without a proper clean, as a seasonal reset, or simply when a home needs to be brought back up to a genuinely spotless standard.",
+      "This service covers everything included in a standard clean, then goes further into the detail work: skirting boards, inside appliances, built-up grime in kitchens and bathrooms, and the areas that get missed week to week."
+    ],
+    groups: [
+      {
+        title: "Kitchen Deep Clean",
+        items: [
+          "Interior oven cleaning",
+          "Rangehood and filter degreasing",
+          "Inside microwave, front to back",
+          "Cupboard fronts and handles, degreased",
+          "Splashback and grout detailing",
+          "Inside fridge cleaning (on request)",
+          "Skirting boards and floor edges"
+        ]
+      },
+      {
+        title: "Bathroom Deep Clean",
+        items: [
+          "Grout and tile detailing",
+          "Descaling shower screens and taps",
+          "Behind and around toilets",
+          "Exhaust fan cleaning",
+          "Cabinet interiors wiped down",
+          "Mould treatment on sealant and tile lines"
+        ]
+      },
+      {
+        title: "Whole-Home Detail Work",
+        items: [
+          "Skirting boards throughout",
+          "Light switches and power points",
+          "Door frames and handles",
+          "Window sills and tracks",
+          "Ceiling fans and light fittings",
+          "Behind and under furniture where accessible",
+          "Cobwebs from all corners and ceilings"
+        ]
+      }
+    ],
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Optional Add-Ons",
+        items: [
+          "Interior windows and glass doors",
+          "Blind cleaning",
+          "Wall mark removal",
+          "Carpet steam cleaning",
+          "Balcony and outdoor area detailing"
+        ]
+      },
+      {
+        kind: "text",
+        title: "When to Book a Deep Clean",
+        body: "A deep clean is worth booking:",
+        items: [
+          "Before hosting a big event or family gathering",
+          "As a seasonal reset, typically once or twice a year",
+          "After renovation dust has settled but before the builders clean",
+          "When starting a new regular cleaning arrangement with us",
+          "Any time a home simply needs more than a standard visit can cover"
+        ]
+      }
+    ],
+    note: "Deep cleans are quoted based on property size and current condition. Send photos over WhatsApp for a fast, accurate quote.",
+    quote: true
+  },
+
+  "window-cleaning": {
+    icon: "window",
+    name: "Window Cleaning",
+    summary: "Streak-free interior and accessible exterior window cleaning.",
+    intro: [
+      "Clean windows change how a whole home looks and feels, letting in more light and giving every room a sharper, brighter finish. We clean interior glass as standard, with accessible exterior windows, tracks and sills included where they can be reached safely.",
+      "This service is available as a standalone booking or bundled with any of our other cleaning services, and is a popular add-on for pre-sale presentation, end of lease cleans and regular seasonal upkeep."
+    ],
+    groups: [
+      {
+        title: "Standard Scope",
+        items: [
+          "Interior glass cleaning, streak-free finish",
+          "Accessible exterior glass cleaning",
+          "Window sills wiped down",
+          "Window tracks cleaned of dust and debris",
+          "Flyscreens wiped where fitted",
+          "Glass doors and sliding door tracks"
+        ]
+      },
+      {
+        title: "Not Included as Standard",
+        items: [
+          "High or second-storey exterior windows requiring specialised access equipment",
+          "Security screens requiring removal",
+          "Heavily soiled windows from construction or long-term neglect (quoted separately)"
+        ]
+      }
+    ],
+    contentBlocks: [
+      {
+        kind: "text",
+        title: "Good to Know",
+        items: [
+          "Exterior windows are only cleaned where they can be accessed safely from ground level or a standard ladder.",
+          "High windows, balcony glass with restricted access, or heavily soiled exteriors may require a specialised quote.",
+          "Can be booked as a standalone service or added to any regular, end of lease, deep clean or house-for-sale booking."
+        ]
+      }
+    ],
+    note: "Pricing depends on the number of windows, property size and accessibility. Send photos or your property details over WhatsApp for an accurate quote.",
+    quote: true
   }
 };
 
