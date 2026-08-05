@@ -2272,20 +2272,20 @@ function HeroSection() {
               <Clock className="h-3.5 w-3.5" /> 15+ years in Melbourne
             </span>
           </Reveal>
-          <Reveal delay={0.08}>
+          <Reveal delay={0.03}>
             <h1 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
               Spotless homes and workplaces,
               <span className="text-emerald-400"> every single time.</span>
             </h1>
           </Reveal>
-          <Reveal delay={0.16}>
+          <Reveal delay={0.06}>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
               Domestic, commercial, end of lease, NDIS and aged care cleaning across
               Melbourne. Transparent pricing, agency approved standards, and a team that
               shows up ready.
             </p>
           </Reveal>
-          <Reveal delay={0.24}>
+          <Reveal delay={0.09}>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <EmeraldButton href={WA} className="text-base">
                 <WhatsAppIcon className="h-5 w-5" /> Get a free quote
@@ -2296,7 +2296,7 @@ function HeroSection() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.3}>
+          <Reveal delay={0.12}>
             <a
               href={TEL}
               className="mt-6 flex items-center gap-4 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 transition-colors hover:bg-white/10"
@@ -2311,7 +2311,7 @@ function HeroSection() {
             </a>
           </Reveal>
 
-          <Reveal delay={0.34}>
+          <Reveal delay={0.15}>
             <div className="mt-6 flex flex-wrap gap-2">
               {HERO_TRUST_BADGES.map((badge, i) => (
                 <span
@@ -2324,27 +2324,29 @@ function HeroSection() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.38}>
-            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div className="col-span-2">
-                <p className="mb-2 text-xs font-bold uppercase tracking-tight text-emerald-300">Recent Airbnb turnover</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <img src="/kitchen-after.jpg" alt="Bed made after an Airbnb turnover clean" loading="lazy" className="h-24 w-full rounded-xl object-cover sm:h-28" />
-                  <img src="/bathroom-after.jpg" alt="Property presented after an Airbnb turnover clean" loading="lazy" className="h-24 w-full rounded-xl object-cover sm:h-28" />
-                </div>
-              </div>
-              <div className="col-span-2">
-                <p className="mb-2 text-xs font-bold uppercase tracking-tight text-emerald-300">Before &amp; after</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="relative h-24 overflow-hidden rounded-xl sm:h-28">
-                    <img src="/tiles-before.jpg" alt="Before cleaning" loading="lazy" className="h-full w-full object-cover" />
-                    <span className="absolute left-2 top-2 rounded-full bg-slate-900/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-white">Before</span>
+          <Reveal delay={0.18}>
+            <div className="mt-6">
+              <p className="mb-2 text-xs font-bold uppercase tracking-tight text-emerald-300">Before &amp; after</p>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { before: "/kitchen-before.jpg", after: "/kitchen-after.jpg", label: "Kitchen" },
+                  { before: "/bathroom-before.jpg", after: "/bathroom-after.jpg", label: "Bathroom" },
+                  { before: "/tiles-before.jpg", after: "/tiles-after.jpg", label: "Tile & Grout" }
+                ].map((pair, i) => (
+                  <div key={i} className="overflow-hidden rounded-xl">
+                    <div className="grid grid-cols-2">
+                      <div className="relative h-28 overflow-hidden sm:h-36">
+                        <img src={pair.before} alt={`${pair.label} before cleaning`} loading="lazy" className="h-full w-full object-cover" />
+                        <span className="absolute left-1.5 top-1.5 rounded-full bg-slate-900/80 px-2 py-0.5 text-[9px] font-bold uppercase tracking-tight text-white">Before</span>
+                      </div>
+                      <div className="relative h-28 overflow-hidden sm:h-36">
+                        <img src={pair.after} alt={`${pair.label} after cleaning`} loading="lazy" className="h-full w-full object-cover" />
+                        <span className="absolute left-1.5 top-1.5 rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] font-bold uppercase tracking-tight text-white">After</span>
+                      </div>
+                    </div>
+                    <p className="mt-1.5 text-center text-xs font-semibold text-slate-300">{pair.label}</p>
                   </div>
-                  <div className="relative h-24 overflow-hidden rounded-xl sm:h-28">
-                    <img src="/tiles-after.jpg" alt="After cleaning" loading="lazy" className="h-full w-full object-cover" />
-                    <span className="absolute left-2 top-2 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-white">After</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </Reveal>
