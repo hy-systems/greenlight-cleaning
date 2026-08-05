@@ -2127,6 +2127,15 @@ const CLEANING_TYPES = [
   "Other"
 ];
 
+const HERO_TRUST_BADGES = [
+  "Airbnb Specialists",
+  "End of Lease Experts",
+  "Fully Insured",
+  "Police Checked",
+  "15+ Years Experience",
+  "100% Satisfaction Guaranteed"
+];
+
 function EnquiryForm() {
   const [submitted, setSubmitted] = useState(false);
 
@@ -2256,7 +2265,7 @@ function HeroSection() {
     <section className="relative overflow-hidden bg-slate-900 text-white">
       <div className="gl-hero-glow" />
       <QuickContactCluster />
-      <Container className="relative grid items-center gap-10 py-12 lg:grid-cols-12 lg:py-16">
+      <Container className="relative grid items-center gap-10 py-10 lg:grid-cols-12 lg:py-12">
         <div className="lg:col-span-7">
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-bold uppercase tracking-tight text-emerald-300">
@@ -2284,6 +2293,59 @@ function HeroSection() {
               <OutlineButton href={TEL} dark className="text-base">
                 <Phone className="h-4 w-4" /> Call {PHONE_DISPLAY}
               </OutlineButton>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.3}>
+            <a
+              href={TEL}
+              className="mt-6 flex items-center gap-4 rounded-2xl border border-white/15 bg-white/5 px-5 py-4 transition-colors hover:bg-white/10"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+                <Phone className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block text-xs font-bold uppercase tracking-tight text-emerald-300">Prefer to talk? Call us directly</span>
+                <span className="block text-2xl font-black tracking-tight text-white">{PHONE_DISPLAY}</span>
+              </span>
+            </a>
+          </Reveal>
+
+          <Reveal delay={0.34}>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {HERO_TRUST_BADGES.map((badge, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-200"
+                >
+                  <Check className="h-3.5 w-3.5 text-emerald-400" /> {badge}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.38}>
+            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div className="col-span-2">
+                <p className="mb-2 text-xs font-bold uppercase tracking-tight text-emerald-300">Recent Airbnb turnover</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <img src="/kitchen-after.jpg" alt="Bed made after an Airbnb turnover clean" loading="lazy" className="h-24 w-full rounded-xl object-cover sm:h-28" />
+                  <img src="/bathroom-after.jpg" alt="Property presented after an Airbnb turnover clean" loading="lazy" className="h-24 w-full rounded-xl object-cover sm:h-28" />
+                </div>
+              </div>
+              <div className="col-span-2">
+                <p className="mb-2 text-xs font-bold uppercase tracking-tight text-emerald-300">Before &amp; after</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="relative h-24 overflow-hidden rounded-xl sm:h-28">
+                    <img src="/tiles-before.jpg" alt="Before cleaning" loading="lazy" className="h-full w-full object-cover" />
+                    <span className="absolute left-2 top-2 rounded-full bg-slate-900/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-white">Before</span>
+                  </div>
+                  <div className="relative h-24 overflow-hidden rounded-xl sm:h-28">
+                    <img src="/tiles-after.jpg" alt="After cleaning" loading="lazy" className="h-full w-full object-cover" />
+                    <span className="absolute left-2 top-2 rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight text-white">After</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </Reveal>
         </div>
