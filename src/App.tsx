@@ -2139,7 +2139,7 @@ const HERO_TRUST_BADGES = [
 function EnquiryForm() {
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
@@ -2170,8 +2170,20 @@ function EnquiryForm() {
     const mailtoLink = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary)}`;
     const waLink = `https://wa.me/61430230971?text=${encodeURIComponent(summary)}`;
 
-    window.open(waLink, "_blank");
-    window.location.href = mailtoLink;
+    // Try the instant SMS/WhatsApp notification first. If it fails for any
+    // reason (Twilio not yet configured, trial account restrictions, etc),
+    // fall back to the manual mailto/WhatsApp links so nothing is ever lost.
+    try {
+      const res = await fetch("/api/send-notification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, email, cleaningType, propertySize, suburb, preferredDate, message })
+      });
+      if (!res.ok) throw new Error("notification request failed");
+    } catch (err) {
+      window.open(waLink, "_blank");
+      window.location.href = mailtoLink;
+    }
 
     setSubmitted(true);
   };
