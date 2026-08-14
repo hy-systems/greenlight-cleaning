@@ -12,6 +12,8 @@
     <url><loc>https://greenlight-cleaning.vercel.app/services/aged-care</loc><priority>0.8</priority></url>
     <url><loc>https://greenlight-cleaning.vercel.app/services/strata</loc><priority>0.8</priority></url>
     <url><loc>https://greenlight-cleaning.vercel.app/services/airbnb-short-term-rental</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/deep-cleaning</loc><priority>0.8</priority></url>
+    <url><loc>https://greenlight-cleaning.vercel.app/services/window-cleaning</loc><priority>0.8</priority></url>
     <url><loc>https://greenlight-cleaning.vercel.app/service-areas</loc><priority>0.9</priority></url>
     <url><loc>https://greenlight-cleaning.vercel.app/service-areas/brighton-cleaning-services</loc><priority>0.9</priority></url>
     <url><loc>https://greenlight-cleaning.vercel.app/service-areas/hampton-cleaning-services</loc><priority>0.9</priority></url>
