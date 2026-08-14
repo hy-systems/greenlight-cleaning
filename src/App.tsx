@@ -2138,9 +2138,12 @@ const HERO_TRUST_BADGES = [
 
 function EnquiryForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const form = e.currentTarget;
     const data = new FormData(form);
 
@@ -2186,6 +2189,7 @@ function EnquiryForm() {
     }
 
     setSubmitted(true);
+    setIsSubmitting(false);
   };
 
   if (submitted) {
@@ -2194,6 +2198,7 @@ function EnquiryForm() {
         <p className="text-white">
           Thank you for your enquiry. Greenlight Cleaning has received your request and we will contact you shortly.
         </p>
+        <button type="button" onClick={() => setSubmitted(false)} className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-emerald-600 hover:text-emerald-700">Send another enquiry</button>
       </div>
     );
   }
@@ -2209,17 +2214,17 @@ function EnquiryForm() {
       <form onSubmit={handleSubmit} className="mt-5 space-y-4">
         <div>
           <label htmlFor="name" className={labelCls}>Name</label>
-          <input id="name" name="name" type="text" required className={inputCls} placeholder="Your full name" />
+          <input id="name" name="name" type="text" required maxLength={100} className={inputCls} placeholder="Your full name" />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="phone" className={labelCls}>Phone</label>
-            <input id="phone" name="phone" type="tel" required className={inputCls} placeholder="04XX XXX XXX" />
+            <input id="phone" name="phone" type="tel" required minLength={8} maxLength={20} pattern="[+]?[0-9 ()-]{8,20}" title="Enter a valid Australian phone number, for example 0412 345 678" className={inputCls} placeholder="04XX XXX XXX" />
           </div>
           <div>
             <label htmlFor="email" className={labelCls}>Email</label>
-            <input id="email" name="email" type="email" required className={inputCls} placeholder="you@email.com" />
+            <input id="email" name="email" type="email" required maxLength={150} className={inputCls} placeholder="you@email.com" />
           </div>
         </div>
 
@@ -2240,7 +2245,7 @@ function EnquiryForm() {
           </div>
           <div>
             <label htmlFor="suburb" className={labelCls}>Suburb</label>
-            <input id="suburb" name="suburb" type="text" required className={inputCls} placeholder="e.g. Brighton" />
+            <input id="suburb" name="suburb" type="text" required maxLength={100} className={inputCls} placeholder="e.g. Brighton" />
           </div>
         </div>
 
@@ -2251,14 +2256,15 @@ function EnquiryForm() {
 
         <div>
           <label htmlFor="message" className={labelCls}>Message (optional)</label>
-          <textarea id="message" name="message" rows={3} className={inputCls} placeholder="Any extra details we should know" />
+          <textarea id="message" name="message" rows={3} maxLength={1000} className={inputCls} placeholder="Any extra details we should know" />
         </div>
 
         <button
           type="submit"
-          className="gl-cta gl-tap inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30"
+          disabled={isSubmitting}
+          className="gl-cta gl-tap inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-70"
         >
-          Send Enquiry
+          {isSubmitting ? "Sending..." : "Send Enquiry"}
         </button>
       </form>
     </div>
