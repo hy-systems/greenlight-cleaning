@@ -2220,7 +2220,7 @@ function EnquiryForm() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="phone" className={labelCls}>Phone</label>
-            <input id="phone" name="phone" type="tel" required minLength={8} maxLength={20} pattern="[+]?[0-9 ()-]{8,20}" title="Enter a valid Australian phone number, for example 0412 345 678" className={inputCls} placeholder="04XX XXX XXX" />
+            <input id="phone" name="phone" type="tel" required minLength={8} maxLength={20} pattern="[+]?[0-9 \(\)\-]{8,20}" title="Enter a valid Australian phone number, for example 0412 345 678" className={inputCls} placeholder="04XX XXX XXX" />
           </div>
           <div>
             <label htmlFor="email" className={labelCls}>Email</label>
