@@ -275,7 +275,7 @@ const SERVICES: Record<string, Service> = {
       }
     ],
     chipsTitle: "Agency approved",
-    chips: ["Ray White", "Hodges", "Jellis Craig", "Barry Plant", "Buxton", "Biggin & Scott", "Marshall White", "Woodards", "Harcourts", "Belle Property", "McGrath", "LJ Hooker", "Noel Jones", "OBrien Real Estate"],
+    chips: ["Ray White", "Hodges", "Jellis Craig", "Barry Plant", "Buxton", "Biggin & Scott", "Marshall White", "Woodards", "Harcourts", "Belle Property", "McGrath", "LJ Hooker", "Noel Jones", "O'Brien Real Estate"],
     pricing: {
       type: "carpet",
       header: ["Configuration", "Base", "With Carpet Steam"],
@@ -2271,7 +2271,7 @@ function HeroSection() {
     { icon: Shield, text: "Bond back focused end of lease cleans" },
     { icon: Accessibility, text: "NDIS and Aged Care provider ready" },
     { icon: Award, text: "Fully insured, agency approved teams" },
-    { icon: MapPin, text: "Serving most of Southeast suburbs in Melbourne and part of North and west suburbs" }
+    { icon: MapPin, text: "Serving most of the southeastern suburbs of Melbourne, and parts of the northern and western suburbs" }
   ];
   return (
     <section className="relative overflow-hidden bg-slate-900 text-white">
@@ -3014,11 +3014,11 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }: {
         <div className="relative h-64 w-full select-none sm:h-72">
           {/* Before image (full) */}
           <div className="absolute inset-0 bg-slate-200">
-            <img src={beforeImage} alt={`${title} before cleaning`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
+            <img src={beforeImage} alt={`${title}, before`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
           </div>
           {/* After image clipped by the slider position */}
                       <div className="absolute inset-0 overflow-hidden bg-emerald-100" style={{ clipPath: `inset(0 0 0 ${pos}%)` }}>
-            <img src={afterImage} alt={`${title} after cleaning`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
+            <img src={afterImage} alt={`${title}, after`} loading="lazy" draggable={false} className="h-full w-full object-cover" />
           </div>
           {/* Labels */}
           <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-slate-900/80 px-3 py-1 text-xs font-bold uppercase tracking-tight text-white">Before</span>
@@ -3053,7 +3053,7 @@ function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
   const items = [
     { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-before.jpg", after: "/kitchen-after.jpg" },
     { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-before.jpg", after: "/bathroom-after.jpg" },
-    { title: "Tile and grout cleaning", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
+    { title: "Tile and grout", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
   ];
   return (
     <section className="bg-slate-50 py-16 sm:py-20">
@@ -3062,7 +3062,7 @@ function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
           <Reveal className="mb-10 max-w-2xl">
             <Eyebrow>Results you can see</Eyebrow>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Before and after</h2>
-            <p className="mt-3 text-slate-600">Drag the slider on each panel to compare. Real photos can be dropped straight into these frames.</p>
+            <p className="mt-3 text-slate-600">Drag the slider on each panel to compare.</p>
           </Reveal>
         )}
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
