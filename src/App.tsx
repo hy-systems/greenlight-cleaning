@@ -2632,9 +2632,9 @@ function DynamicServiceView() {
   const navigate = useNavigate();
   const k = serviceKey && SERVICES[serviceKey] ? serviceKey : SERVICE_KEYS[0];
 
-  // Unknown service slug in the URL — bounce to the services index instead of crashing
+  // Unknown service slug in the URL, show the not found page instead of crashing
   if (serviceKey && !SERVICES[serviceKey]) {
-    return <Navigate to="/services" replace />;
+    return <NotFound />;
   }
 
   const s = SERVICES[k];
@@ -2839,14 +2839,7 @@ function SuburbPageView() {
   }, [suburb]);
 
   if (!suburb) {
-    return (
-      <Container className="py-24 text-center">
-        <p className="text-slate-600">This service area page is coming soon.</p>
-        <Link to="/service-areas" className="text-emerald-600 underline">
-          View all service areas
-        </Link>
-      </Container>
-    );
+    return <NotFound />;
   }
 
   const serviceSchema = {
@@ -3625,6 +3618,33 @@ function ScrollToTop() {
 /* ============================================================
    APP SHELL — layout that wraps every route
    ============================================================ */
+function NotFound() {
+  return (
+    <section className="bg-white py-12 sm:py-16">
+      <Container>
+        <Reveal className="mb-10 max-w-2xl">
+          <Eyebrow>Page not found</Eyebrow>
+          <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-5xl">We could not find that page</h1>
+          <p className="mt-4 text-slate-600">
+            The page you are after may have moved or never existed. Head back to the homepage, browse our services, or give us a call and we will point you in the right direction.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Link to="/" className="gl-tap inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 hover:bg-slate-50">
+              Back to home
+            </Link>
+            <Link to="/services" className="gl-tap inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 hover:bg-slate-50">
+              View all services
+            </Link>
+            <EmeraldButton href={TEL}>
+              <Phone className="h-4 w-4" /> {PHONE_DISPLAY}
+            </EmeraldButton>
+          </div>
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
 function AppShell({ state, dispatch }: { state: State; dispatch: Dispatch }) {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 antialiased">
@@ -3643,7 +3663,7 @@ function AppShell({ state, dispatch }: { state: State; dispatch: Dispatch }) {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           {/* Unknown paths fall back to home rather than a dead page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />
