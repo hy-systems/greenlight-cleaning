@@ -2508,7 +2508,7 @@ function ServiceGrid() {
 function PricingTable({ pricing }: { pricing: Pricing }) {
   const isCarpet = pricing.type === "carpet";
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200">
+    <div className="overflow-x-auto rounded-2xl border border-slate-200">
       <table className="w-full border-collapse text-left text-sm">
         <thead>
           <tr className="bg-slate-900 text-white">
@@ -2590,7 +2590,7 @@ function ContentBlockRenderer({ block, index }: { block: ContentBlock; index: nu
       <Reveal delay={delay} className="mt-8">
         <h3 className="text-lg font-bold tracking-tight text-slate-900">{block.title}</h3>
         {block.intro && <p className="mt-2 text-sm leading-relaxed text-slate-600">{block.intro}</p>}
-        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
+        <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200">
           <table className="w-full border-collapse text-left text-sm">
             <thead>
               <tr className="bg-slate-900 text-white">
