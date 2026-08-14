@@ -2139,10 +2139,12 @@ const HERO_TRUST_BADGES = [
 function EnquiryForm() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isSubmitting) return;
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setIsSubmitting(true);
     const form = e.currentTarget;
     const data = new FormData(form);
@@ -2189,6 +2191,7 @@ function EnquiryForm() {
     }
 
     setSubmitted(true);
+    submittingRef.current = false;
     setIsSubmitting(false);
   };
 
