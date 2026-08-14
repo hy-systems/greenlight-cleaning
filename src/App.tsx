@@ -3049,19 +3049,24 @@ function BeforeAfter({ title, sublabel, beforeImage, afterImage }: {
   );
 }
 
-function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
+function BeforeAfterGallery({ heading = true, asPage = false }: { heading?: boolean; asPage?: boolean }) {
   const items = [
     { title: "Kitchen detail", sublabel: "Benchtops, splashback, cooktop", before: "/kitchen-before.jpg", after: "/kitchen-after.jpg" },
     { title: "Bathroom refresh", sublabel: "Showers, tiles, grout, basins", before: "/bathroom-before.jpg", after: "/bathroom-after.jpg" },
     { title: "Tile and grout", sublabel: "Hard floor restoration and stain removal", before: "/tiles-before.jpg", after: "/tiles-after.jpg" }
   ];
   return (
+    <>
     <section className="bg-slate-50 py-16 sm:py-20">
       <Container>
         {heading && (
           <Reveal className="mb-10 max-w-2xl">
             <Eyebrow>Results you can see</Eyebrow>
-            <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Before and after</h2>
+            {asPage ? (
+          <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Before and after: real Greenlight results</h1>
+        ) : (
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">Before and after</h2>
+        )}
             <p className="mt-3 text-slate-600">Drag the slider on each panel to compare.</p>
           </Reveal>
         )}
@@ -3072,6 +3077,8 @@ function BeforeAfterGallery({ heading = true }: { heading?: boolean }) {
         </div>
       </Container>
     </section>
+      {asPage && <CtaBand />}
+    </>
   );
 }
 
@@ -3622,7 +3629,7 @@ function AppShell({ state, dispatch }: { state: State; dispatch: Dispatch }) {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/services/:serviceKey" element={<DynamicServiceView />} />
           <Route path="/service-areas/:suburbSlug" element={<SuburbPageView />} />
-          <Route path="/gallery" element={<BeforeAfterGallery />} />
+          <Route path="/gallery" element={<BeforeAfterGallery asPage />} />
           <Route path="/service-areas" element={<AreasPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
