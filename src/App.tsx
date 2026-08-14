@@ -18,6 +18,7 @@ const SMS = "sms:0430230971";
 const EMAIL = "Info@greenlightclean.com.au";
 const MAILTO = "mailto:Info@greenlightclean.com.au?subject=Cleaning%20Quote";
 const WA = "https://wa.me/61430230971?text=Hi%20Greenlight%2C%20I%27d%20like%20a%20cleaning%20quote.%20Here%20are%20my%20property%20photos%2Fvideos.";
+const SITE_URL = "https://greenlight-cleaning.vercel.app";
 
 /* ============================================================
    TYPES
@@ -2826,17 +2827,7 @@ function SuburbPageView() {
   const lookupKey = (suburbSlug || "").replace(/-cleaning-services$/, "");
   const suburb = SUBURBS[lookupKey];
 
-  useEffect(() => {
-    if (!suburb) return;
-    document.title = suburb.metaTitle;
-    let meta = document.querySelector('meta[name="description"]');
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.setAttribute("name", "description");
-      document.head.appendChild(meta);
-    }
-    meta.setAttribute("content", suburb.metaDescription);
-  }, [suburb]);
+
 
   if (!suburb) {
     return <NotFound />;
@@ -3590,6 +3581,7 @@ function SeoSchema() {
     "@context": "https://schema.org",
     "@type": "HousecleaningService",
     name: "Greenlight Cleaning Pty Ltd",
+    url: SITE_URL,
     telephone: "+61430230971",
     email: EMAIL,
     priceRange: "$$",
@@ -3618,6 +3610,108 @@ function ScrollToTop() {
 /* ============================================================
    APP SHELL — layout that wraps every route
    ============================================================ */
+/* ============================================================
+PER-PAGE SEO: title, meta description, canonical
+Single source of truth so no page can inherit another page's tags.
+============================================================ */
+interface PageMeta { title: string; description: string; }
+
+const NOT_FOUND_META: PageMeta = {
+  title: "Page not found | Greenlight Cleaning",
+  description: "The page you are looking for could not be found. Browse our Melbourne cleaning services or get in touch for a fast, no obligation quote."
+};
+
+const STATIC_PAGE_META: Record<string, PageMeta> = {
+  "/": {
+    title: "Greenlight Cleaning | Domestic & Commercial Cleaners Melbourne",
+    description: "Domestic, commercial, end of lease, NDIS and aged care cleaning across Melbourne. Transparent pricing and agency approved standards."
+  },
+  "/services": {
+    title: "Cleaning Services Melbourne | Greenlight Cleaning",
+    description: "Explore our full range of cleaning services across Melbourne, from regular domestic and end of lease cleans to NDIS, aged care and commercial work."
+  },
+  "/service-areas": {
+    title: "Service Areas | Greenlight Cleaning Melbourne",
+    description: "See the Melbourne suburbs we clean, covering most of the southeast plus parts of the north and west, with 48 suburbs serviced in total."
+  },
+  "/gallery": {
+    title: "Before & After Gallery | Greenlight Cleaning",
+    description: "Real before and after photos from Greenlight Cleaning jobs across Melbourne, covering kitchens, bathrooms, and tile and grout restoration."
+  },
+  "/about": {
+    title: "About Us | Greenlight Cleaning Melbourne",
+    description: "Greenlight Cleaning has cleaned Melbourne homes and workplaces for over 15 years, with fully insured, police checked and agency approved teams."
+  },
+  "/contact": {
+    title: "Contact Us | Greenlight Cleaning Melbourne",
+    description: "Get a fast cleaning quote in Melbourne. Send photos over WhatsApp, call 0430 230 971, or email us and we will reply with a price."
+  }
+};
+
+const SERVICE_META_DESCRIPTIONS: Record<string, string> = {
+  "regular-domestic": "Scheduled home cleaning across Melbourne that keeps every room consistently fresh, with clear cash rates from $100 and no charge for unused rooms.",
+  "commercial": "Reliable contract cleaning for Melbourne offices, clinics, schools, gyms and public facilities, quoted on inspection and scheduled around you.",
+  "end-of-lease": "Bond back focused end of lease cleaning in Melbourne, aligned to the checklists used by 14 leading real estate agencies. Carpet steam cleaning available.",
+  "move-in": "A thorough deep clean before you move into a new Melbourne home, covering kitchens, bathrooms, cupboards inside and out, and all floors.",
+  "builders": "Rough, sparkle and final builders cleans for new Melbourne builds and renovations, removing construction dust, paint and adhesive residue before handover.",
+  "house-for-sale": "Presentation ready cleaning for Melbourne properties going to market, prepared for professional photography, open inspections and sale campaigns.",
+  "ndis": "NDIS cleaning and domestic assistance in Melbourne at $58.03 per hour, for self managed and plan managed participants. Support coordinators welcome.",
+  "aged-care": "Respectful aged care cleaning and domestic help across Melbourne from $55 per hour, supporting older Australians living independently at home.",
+  "strata": "Scheduled strata and common area cleaning for Melbourne apartment blocks, townhouse complexes and body corporates, from lobbies to bin rooms.",
+  "airbnb-short-term-rental": "Airbnb turnover cleaning in Melbourne with hotel standard bed making, linen rotation, photo reports and guest supply checks between every stay.",
+  "deep-cleaning": "A thorough top to bottom deep clean for Melbourne homes, reaching built up grime in kitchens, bathrooms, skirting boards and inside appliances.",
+  "window-cleaning": "Streak free interior and accessible exterior window cleaning across Melbourne, including sills, tracks and flyscreens, as a standalone or add on."
+};
+
+function seoForPath(pathname: string): PageMeta {
+  const path = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  if (STATIC_PAGE_META[path]) return STATIC_PAGE_META[path];
+
+  const serviceMatch = path.match(/^\/services\/(.+)$/);
+  if (serviceMatch) {
+    const svc = SERVICES[serviceMatch[1]];
+    if (!svc) return NOT_FOUND_META;
+    return {
+      title: svc.name + " Melbourne | Greenlight Cleaning",
+      description: SERVICE_META_DESCRIPTIONS[serviceMatch[1]] || STATIC_PAGE_META["/services"].description
+    };
+  }
+
+  const suburbMatch = path.match(/^\/service-areas\/(.+)$/);
+  if (suburbMatch) {
+    const sub = SUBURBS[suburbMatch[1].replace(/-cleaning-services$/, "")];
+    if (!sub) return NOT_FOUND_META;
+    return { title: sub.metaTitle, description: sub.metaDescription };
+  }
+
+  return NOT_FOUND_META;
+}
+
+function SeoManager() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    const meta = seoForPath(pathname);
+    document.title = meta.title;
+
+    let desc = document.querySelector('meta[name="description"]');
+    if (!desc) {
+      desc = document.createElement("meta");
+      desc.setAttribute("name", "description");
+      document.head.appendChild(desc);
+    }
+    desc.setAttribute("content", meta.description);
+
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute("href", SITE_URL + pathname);
+  }, [pathname]);
+  return null;
+}
+
 function NotFound() {
   return (
     <section className="bg-white py-12 sm:py-16">
@@ -3651,6 +3745,7 @@ function AppShell({ state, dispatch }: { state: State; dispatch: Dispatch }) {
       <GlobalStyles />
       <SeoSchema />
       <ScrollToTop />
+      <SeoManager />
       <Navigation state={state} dispatch={dispatch} />
       <main>
         <Routes>
